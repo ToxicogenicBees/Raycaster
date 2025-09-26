@@ -1,1 +1,1 @@
-g++ -o render src/main.cpp src/Color.cpp src/Rendering/FrameBuffer.cpp src/Objects/BaseObject.cpp src/Objects/Camera.cpp src/Objects/Light.cpp src/Objects/Sphere.cpp
+powershell -Command "g++ -std=c++17 -Wall -Wextra -Iinclude $(Get-ChildItem -Recurse -Filter '*.cpp' | ForEach-Object { $_.FullName }) -o build/render.exe"

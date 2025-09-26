@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "g++ -std=c++17 -Wall -Wextra -Iinclude $(Get-ChildItem -Recurse -Filter '*.cpp' | ForEach-Object { $_.FullName }) -o build/my_program.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
