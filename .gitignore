@@ -1,0 +1,5 @@
+# Ignore Windows executable files
+*.exe
+
+# Ignore Portable Pixmap files
+*.ppm
