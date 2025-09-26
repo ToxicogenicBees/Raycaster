@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../Objects/BaseObject.h"
 
 struct Intersection {
