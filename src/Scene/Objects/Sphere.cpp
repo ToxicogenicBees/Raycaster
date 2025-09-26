@@ -1,4 +1,4 @@
-#include "../../include/Objects/Sphere.h"
+#include "../../../include/Scene/Objects/Sphere.h"
 
 namespace {
     constexpr const char* TYPE = "Sphere";

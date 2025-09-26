@@ -1,4 +1,4 @@
-#include "../../include/Objects/BaseObject.h"
+#include "../../../include/Scene/Objects/BaseObject.h"
 
 std::vector<BaseObject*> BaseObject::objects;
 uint16_t BaseObject::_cur_id = 0;

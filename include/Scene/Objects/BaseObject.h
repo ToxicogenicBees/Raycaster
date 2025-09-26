@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Rendering/Reflectance.h"
-#include "../Point.hpp"
+#include "../../Rendering/Reflectance.h"
+#include "../../Point.hpp"
 #include <string>
 #include <vector>
 

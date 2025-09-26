@@ -2,6 +2,6 @@
 
 #include "BaseObject.h"
 
-class Camera : BaseObject {
+class Camera {
 
 };

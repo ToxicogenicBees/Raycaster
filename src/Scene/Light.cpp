@@ -1,4 +1,4 @@
-#include "../../include/Objects/Light.h"
+#include "../../include/Scene/Light.h"
 
 std::vector<Light*> Light::lights;
 
