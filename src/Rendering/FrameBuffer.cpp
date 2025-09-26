@@ -1,9 +1,6 @@
-#include "../../include/Rendering/Canvas.h"
+#include "../../include/Rendering/FrameBuffer.h"
 #include <iostream>
 #include <fstream>
-
-Vector2<Color> Canvas::_frame_buffer(300, 200);
-Canvas canvas;
 
 namespace ImageSize {
     const Point<uint16_t> SIZE_1080x1080(1080, 1080);
@@ -17,7 +14,10 @@ namespace ImageSize {
     const Point<uint16_t> SIZE_2000x1000(2000, 1000);
 }
 
-void Canvas::outputToFile(const std::string& image_name) {
+Vector2<Color> FrameBuffer::_buffer(ImageSize::SIZE_1080x1080);
+FrameBuffer frameBuffer;
+
+void FrameBuffer::outputToFile(const std::string& image_name) {
     std::ofstream img((image_name + ".ppm").c_str(), std::ios::binary);
 
     if (!img.is_open()) {
@@ -32,20 +32,19 @@ void Canvas::outputToFile(const std::string& image_name) {
     for (uint16_t y = 0; y < sizeY(); y++) {
         for (uint16_t x = 0; x < sizeX(); x++) {
             unsigned char rgb[3] = {
-                _frame_buffer[y][x].r,
-                _frame_buffer[y][x].g,
-                _frame_buffer[y][x].b
+                _buffer[y][x].r,
+                _buffer[y][x].g,
+                _buffer[y][x].b
             };
             
             img.write(reinterpret_cast<char*>(rgb), 3);
         }
     }
 
-
     img.close();
     std::cout << "New image file created: " << image_name << ".ppm\n";
 }
 
-void Canvas::setPixel(uint16_t x, uint16_t y, const Color& color) {
-    _frame_buffer[y][x] = color;
+void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
+    _buffer[y][x] = color;
 }
