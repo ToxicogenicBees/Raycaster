@@ -1,27 +1,39 @@
 #pragma once
 
+#include "../Rendering/Reflectance.h"
 #include "../Point.hpp"
-#include <stdio.h>
+#include <string>
 #include <vector>
 
-typedef Point<double> double2;
+using double3 = Point<double>;
 
 class BaseObject {
     private:
-        static std::vector<BaseObject*> _objects;   // List of all created objects
-        static uint16_t _cur_id;                    // The current max ID
+        static uint16_t _cur_id;    // The current max ID
+        
+        const std::string _TYPE;    // Object type
+        const uint16_t _ID;         // Object UUID
 
-        double2 _rotation;                          // Rotation in radians
-        double2 _position;                          // Position in units
-        uint16_t _id;                               // Object UUID
-
-        void _assignId();                           // Helper function for assigning an ID
+        Reflectance _ref;           // Object reflectance coefficients
+        double3 _rot;               // Rotation in radians
+        double3 _pos;               // Position in units
 
     public:
-        BaseObject(double2 pos = double2(), double2 rot = double2());
-        BaseObject();
+        static std::vector<BaseObject*> objects;    // List of all created objects
 
-        double2 getPos() { return _position; }
-        double2 getRot() { return _rotation; }
-        uint16_t getId() { return _id; }
+        BaseObject(const std::string& type, const double3& pos, const double3& rot, const Reflectance& ref);
+        BaseObject(const std::string& type, const double3& pos, const Reflectance& ref);
+        BaseObject(const std::string& type, const Reflectance& ref);
+        BaseObject(const std::string& type, const double3& pos);
+        BaseObject(const std::string& type);
+
+        void setReflectance(const Reflectance& ref);
+        void setPosition(const double3& pos);
+        void setRotation(const double3& rot);
+
+        const Reflectance& reflectance() const { return _ref; }
+        const std::string& type() const { return _TYPE; }
+        const double3& position() const { return _pos; }
+        const double3& rotation() const { return _rot; }
+        uint16_t id() const { return _ID; }
 };
