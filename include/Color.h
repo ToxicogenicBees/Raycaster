@@ -13,12 +13,13 @@ struct Color {
 };
 
 namespace Colors {
-    extern const Color BLACK;
-    extern const Color BLUE;
-    extern const Color CYAN;
-    extern const Color GREEN;
-    extern const Color PURPLE;
     extern const Color RED;
-    extern const Color WHITE;
+    extern const Color ORANGE;
     extern const Color YELLOW;
+    extern const Color GREEN;
+    extern const Color CYAN;
+    extern const Color BLUE;
+    extern const Color PURPLE;
+    extern const Color WHITE;
+    extern const Color BLACK;
 }
