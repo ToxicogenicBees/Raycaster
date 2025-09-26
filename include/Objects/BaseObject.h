@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include "../Point.hpp"
 #include <stdio.h>
