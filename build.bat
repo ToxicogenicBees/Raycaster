@@ -1,1 +1,1 @@
-g++ -o render src/main.cpp src/Color.cpp src/Rendering/Canvas.cpp
+g++ -o render src/main.cpp src/Color.cpp src/Rendering/Canvas.cpp src/Objects/BaseObject.cpp src/Objects/Camera.cpp src/Objects/Light.cpp src/Objects/Sphere.cpp
