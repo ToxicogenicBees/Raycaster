@@ -16,8 +16,6 @@ void Canvas::resize(uint16_t size_x, uint16_t size_y) {
     _size_y = size_y;
 
     _frame_buffer = new Buffer<Color>(size_x, size_y);
-
-    std::cout << "Canvas resized\n";
 }
 
 void Canvas::fill(const Color& color) {
@@ -29,7 +27,6 @@ void Canvas::setPixel(uint16_t x, uint16_t y, const Color& color) {
 }
 
 void Canvas::render(const std::string& image_name) {
-    std::cout << "Dumping image\n";
     std::ofstream img((image_name + ".ppm").c_str(), std::ios::binary);
 
     if (!img.is_open()) {
