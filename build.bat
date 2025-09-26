@@ -1,1 +1,1 @@
-g++ -o render src/main.cpp src/Canvas.cpp src/Color.cpp
+g++ -o render src/main.cpp src/Color.cpp src/Rendering/Canvas.cpp
