@@ -12,6 +12,7 @@ class Vector2 {
 
     public:
         Vector2(uint16_t size_x, uint16_t size_y);
+        Vector2(const Point<uint16_t>& size);
 
         std::vector<T>& operator[](uint16_t index);
         
@@ -26,6 +27,11 @@ class Vector2 {
 template <class T>
 Vector2<T>::Vector2(uint16_t size_x, uint16_t size_y) {
     resize(size_x, size_y);
+}
+
+template <class T>
+Vector2<T>::Vector2(const Point<uint16_t>& size) {
+    resize(size.x, size.y);
 }
 
 template <class T>
