@@ -17,13 +17,16 @@ struct Point {
     void operator-=(const Point& point);
     Point operator-();
     
-    Point cross(const Point& point);
-    T dot(const Point& point);
     Point operator*(T s);
     void operator*=(T s);
     
     Point operator/(T s);
     void operator/=(T s);
+    
+    Point cross(const Point& point);
+    T dot(const Point& point);
+    Point normal();
+    T magnitude();
 };
 
 template <class T>
@@ -107,4 +110,14 @@ void Point<T>::operator/=(T s) {
     x /= s;
     y /= s;
     z /= s;
+}
+
+template <class T>
+Point<T> Point<T>::normal() {
+    return *this / magnitude();
+}
+
+template <class T>
+T Point<T>::magnitude() {
+    return sqrt(x * x + y * y + z * z);
 }
