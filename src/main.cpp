@@ -16,7 +16,6 @@ int main() {
 
     // Place sphere
     Sphere sphere(2);                   // Sphere, centered at origin, with radius 2
-    sphere.translate(0, 0, 0);          // Translate sphere (at origin by default)
 
     // Cast rays
     camera.render("CameraOutput");      // Rendering the scene
