@@ -4,15 +4,16 @@
 #include "../Types/Point.hpp"
 
 namespace Transformations {
-    Point<double> apply(Matrix<double> transformation, Point<double> point);
+    void apply(Matrix<double> transformation, Point<double>& point);
 
-    Matrix<double> translation(double x, double y, double z);
-    Matrix<double> translation(const Point<double>& t);
+    Matrix<double> translation(double dx, double dy, double dz);
+    Matrix<double> translation(const Point<double>& dp);
 
-    Matrix<double> scale(double x, double y, double z);
+    Matrix<double> scale(double sx, double sy, double sz);
     Matrix<double> scale(Point<double> s);
+    Matrix<double> scale(double s);
 
-    Matrix<double> rotateX(double radians);
-    Matrix<double> rotateY(double radians);
-    Matrix<double> rotateZ(double radians);
+    Matrix<double> rotateX(double theta_x);
+    Matrix<double> rotateY(double theta_y);
+    Matrix<double> rotateZ(double theta_z);
 };

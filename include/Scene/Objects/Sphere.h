@@ -3,9 +3,6 @@
 #include "BaseObject.h"
 
 class Sphere : public BaseObject {
-    private:
-        const double _RADIUS;
-
     public:
         Sphere(double radius = 0);
 

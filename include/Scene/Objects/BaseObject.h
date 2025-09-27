@@ -6,17 +6,21 @@
 #include <string>
 #include <vector>
 
-using double3 = Point<double>;
+namespace {
+    using double3 = Point<double>;
+    using Points = std::vector<double3>;
+}
 
 struct Intersection;
 
 class BaseObject {
-    protected:
-        const std::string _TYPE;    // Object type
 
-        double3 _pos, _rot;         // Position/rotation in units/radians
-        Reflectance _ref;           // Object's reflectance coefficients
-        Color _color;               // Object's color
+    protected:
+        const std::string _TYPE;        // Object type
+        
+        std::vector<double3> _points;   // Vector of related points for this object
+        Reflectance _ref;               // Object's reflectance coefficients
+        Color _color;                   // Object's color
 
     public:
         static std::vector<BaseObject*> objects;    // List of all created objects
@@ -28,16 +32,18 @@ class BaseObject {
         void setReflectance(const Reflectance& ref);
         void setColor(const Color& color);
 
-        void translate(double x, double y, double z);
-        void translate(const double3& pos);
+        void rotate(double rx, double ry, double rz);
+        void rotate(const double3& r);
+        void scale(double sx, double sy, double sz);
+        void scale(const double3& s);
+        void scale(const double s);
+        void translate(double dx, double dy, double dz);
+        void translate(const double3& dp);
         
-        void rotate(double x, double y, double z);
-        void rotate(const double3& rot);
-
+        const double3& point(uint16_t index) const { return _points[index]; }
+        const std::vector<double3>& points() const { return _points; }
         const Reflectance& reflectance() const { return _ref; }
         const std::string& type() const { return _TYPE; }
-        const double3& position() const { return _pos; }
-        const double3& rotation() const { return _rot; }
         const Color& color() const { return _color; }
 };
 

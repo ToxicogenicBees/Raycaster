@@ -1,4 +1,5 @@
 #include "../../../include/Scene/Objects/BaseObject.h"
+#include "../../../include/Scene/Transformations.h"
 
 std::vector<BaseObject*> BaseObject::objects;
 
@@ -6,20 +7,44 @@ BaseObject::BaseObject(const std::string& type) : _TYPE(type) {
     objects.push_back(this);
 }
 
-void BaseObject::translate(double x, double y, double z) {
-    _pos = double3(x, y, z);
+void BaseObject::rotate(double rx, double ry, double rz) {
+    auto rotX = Transformations::rotateX(rx);
+    auto rotY = Transformations::rotateY(ry);
+    auto rotZ = Transformations::rotateZ(rz);
+    auto rotation = rotZ * rotY * rotX;
+
+    for (double3& point : _points)
+        Transformations::apply(rotation, point);
 }
 
-void BaseObject::translate(const double3& pos) {
-    _pos = pos;
+void BaseObject::rotate(const double3& r) {
+    rotate(r.x, r.y, r.z);
 }
 
-void BaseObject::rotate(double x, double y, double z) {
-    _rot = double3(x, y, z);
+void BaseObject::translate(double dx, double dy, double dz) {
+    auto translation = Transformations::translation(dx, dy, dz);
+
+    for (double3& point : _points)
+        Transformations::apply(translation, point);
 }
 
-void BaseObject::rotate(const double3& rot) {
-    _rot = rot;
+void BaseObject::translate(const double3& dp) {
+    translate(dp.x, dp.y, dp.z);
+}
+
+void BaseObject::scale(double sx, double sy, double sz) {
+    auto scaling = Transformations::scale(sx, sy, sz);
+
+    for (double3& point : _points)
+        Transformations::apply(scaling, point);
+}
+
+void BaseObject::scale(const double3& s) {
+    scale(s.x, s.y, s.z);
+}
+
+void BaseObject::scale(const double s) {
+    scale(s, s, s);
 }
 
 void BaseObject::setReflectance(const Reflectance& ref) {
