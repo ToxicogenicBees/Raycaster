@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cmath>
 
 template <class T>
 struct Point {
@@ -24,10 +24,9 @@ struct Point {
     Point operator/(T s) const;
     void operator/=(T s);
     
-    Point cross(const Point& point) const;
-    T dot(const Point& point) const;
     Point normal() const;
     T magnitude() const;
+    T squaredMagnitude() const;
 };
 
 template <class T>
@@ -83,6 +82,11 @@ Point<T> Point<T>::operator-() {
 }
 
 template <class T>
+Point<T> operator*(T s, const Point<T>& p) {
+    return p * s;
+}
+
+template <class T>
 Point<T> Point<T>::operator*(T s) const {
     return Point(x * s, y * s, z * s);
 }
@@ -92,6 +96,11 @@ void Point<T>::operator*=(T s) {
     x *= s;
     y *= s;
     z *= s;
+}
+
+template <class T>
+Point<T> operator/(T s, const Point<T>& p) {
+    return p / s;
 }
 
 template <class T>
@@ -107,25 +116,31 @@ void Point<T>::operator/=(T s) {
 }
 
 template <class T>
-Point<T> Point<T>::cross(const Point<T>& point) const {
+Point<T> cross(const Point<T>& p1, const Point<T>& p2) {
     return Point(
-        y * point.z - z * point.y,
-        z * point.x - x * point.z,
-        x * point.y - y * point.x
+        p1.y * p2.z - p1.z * p2.y,
+        p1.z * p2.x - p1.x * p2.z,
+        p1.x * p2.y - p1.y * p2.x
     );
 }
 
 template <class T>
-T Point<T>::dot(const Point<T>& point) const {
-    return x * point.x + y * point.y + z * point.z;
+T dot(const Point<T>& p1, const Point<T>& p2) {
+    return (p1.x * p2.x) + (p1.y * p2.y) + (p1.z * p2.z);
 }
 
 template <class T>
 Point<T> Point<T>::normal() const {
-    return *this / magnitude();
+    double mag = magnitude();
+    return (mag != 0 ? (*this / mag) : *this);
 }
 
 template <class T>
 T Point<T>::magnitude() const {
     return sqrt(x * x + y * y + z * z);
+}
+
+template <class T>
+T Point<T>::squaredMagnitude() const {
+    return dot(*this, *this);
 }
