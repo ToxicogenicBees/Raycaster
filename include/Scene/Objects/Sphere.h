@@ -2,7 +2,7 @@
 
 #include "BaseObject.h"
 
-class Sphere : BaseObject {
+class Sphere : public BaseObject {
     private:
         const double _RADIUS;
 
@@ -11,4 +11,6 @@ class Sphere : BaseObject {
         Sphere(double radius, const Reflectance& reflectivity);
         Sphere(const double3& pos, double radius);
         Sphere(double radius = 0);
+
+        Intersection findIntersection(const double3& start, const double3& dir) override;
 };
