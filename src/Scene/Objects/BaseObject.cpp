@@ -3,7 +3,7 @@
 
 std::vector<BaseObject*> BaseObject::objects;
 
-BaseObject::BaseObject(const std::string& type) : _TYPE(type) {
+BaseObject::BaseObject() {
     objects.push_back(this);
 }
 

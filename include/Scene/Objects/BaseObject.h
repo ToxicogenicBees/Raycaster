@@ -16,8 +16,6 @@ struct Intersection;
 class BaseObject {
 
     protected:
-        const std::string _TYPE;        // Object type
-        
         std::vector<double3> _points;   // Vector of related points for this object
         Reflectance _ref;               // Object's reflectance coefficients
         Color _color;                   // Object's color
@@ -25,9 +23,9 @@ class BaseObject {
     public:
         static std::vector<BaseObject*> objects;    // List of all created objects
 
-        BaseObject(const std::string& type);
-
         virtual Intersection findIntersection(const double3& start, const double3& dir) const = 0;
+
+        BaseObject();
 
         void setReflectance(const Reflectance& ref);
         void setColor(const Color& color);
@@ -43,7 +41,6 @@ class BaseObject {
         const double3& point(uint16_t index) const { return _points[index]; }
         const std::vector<double3>& points() const { return _points; }
         const Reflectance& reflectance() const { return _ref; }
-        const std::string& type() const { return _TYPE; }
         const Color& color() const { return _color; }
 };
 

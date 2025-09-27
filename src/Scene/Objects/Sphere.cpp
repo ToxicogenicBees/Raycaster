@@ -1,14 +1,12 @@
 #include "../../../include/Scene/Objects/Sphere.h"
 #include <iostream>
-#include <cmath>
 
 namespace {
-    constexpr const char* TYPE = "Sphere";
     constexpr const uint16_t CENTER = 0;
     constexpr const uint16_t RADIUS = 1;
 }
 
-Sphere::Sphere(double radius) : BaseObject(TYPE) {
+Sphere::Sphere(double radius) {
     // Insert origin point for sphere
     _points.push_back(double3(0, 0, 0));
 
@@ -31,7 +29,7 @@ Intersection Sphere::findIntersection(const double3& start, const double3& dir) 
     if (sqr_d > sqr_rad)
         return Intersection();
 
-    double t1c = sqrt(sqr_rad - sqr_d);
+    double t1c = std::sqrt(sqr_rad - sqr_d);
     double t1 = tc - t1c;
     double t2 = tc + t1c;
 
