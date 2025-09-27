@@ -7,40 +7,19 @@
 using namespace ImageSize;
 using namespace Colors;
 
-// int main(int argc, char *argv[]) {
-//     // Resize frame buffer to desired size
-//     frameBuffer.resize(SIZE_1920x1080);
-
-//     // Random colors for now
-//     Color colors[8] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, WHITE, BLACK};
-
-//     for (int x = 0; x < frameBuffer.sizeX(); x++ ) {
-//         for (int y = 0; y < frameBuffer.sizeY(); y++) {
-//             frameBuffer.setPixel(x, y, colors[std::rand() % 8]);
-//         }
-//     }
-
-//     // Determine if a file name was passed
-//     std::string fileName = (argc > 1 ? argv[1] : "out");
-
-//     // Render an image
-//     frameBuffer.outputToFile(fileName);
-    
-//     return 0;
-// }
-
 int main() {
-    frameBuffer.resize(SIZE_1920x1080);
+    frameBuffer.resize(SIZE_1920x1080); // Adjusting image size
     
     // Position camera
-    camera.setPosition(double3(5, 5, 5));
-    camera.setLookVector(double3(0, 0, 0));
+    camera.translate(5, 0, 5);          // Camera's position
+    camera.lookAt(0, 0, 0);             // Point camera's pointing towards
 
     // Place sphere
-    Sphere sphere(double3(0, 0, 0), 2);
+    Sphere sphere(2);                   // Sphere, centered at origin, with radius 2
+    sphere.translate(0, 0, 0);          // Translate sphere (at origin by default)
 
     // Cast rays
-    camera.castRays(3.141592 / 2);
+    camera.render("CameraOutput");      // Rendering the scene
 
     return 0;
 }
