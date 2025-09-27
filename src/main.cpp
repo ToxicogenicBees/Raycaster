@@ -38,7 +38,7 @@ int main() {
     Sphere sphere(double3(0, 0, 0), 1);
 
     // Cast rays
-    camera.castRays(3.141592 / 4);
+    camera.castRays(3.141592 / 2);
 
     return 0;
 }
