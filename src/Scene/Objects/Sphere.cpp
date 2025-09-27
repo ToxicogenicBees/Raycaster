@@ -6,12 +6,9 @@ namespace {
     constexpr const char* TYPE = "Sphere";
 }
 
-Sphere::Sphere(const double3& pos, double radius, const Reflectance& reflectivity) : BaseObject(TYPE, pos, reflectivity), _RADIUS(radius) {}
-Sphere::Sphere(double radius, const Reflectance& reflectivity) : BaseObject(TYPE, reflectivity), _RADIUS(radius) {}
-Sphere::Sphere(const double3& pos, double radius) : BaseObject(TYPE, pos), _RADIUS(radius) {}
 Sphere::Sphere(double radius) : BaseObject(TYPE), _RADIUS(radius) {}
 
-Intersection Sphere::findIntersection(const double3& start, const double3& dir) {
+Intersection Sphere::findIntersection(const double3& start, const double3& dir) const {
     // https://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
 
     double3 L = _pos - start;

@@ -7,10 +7,7 @@ class Sphere : public BaseObject {
         const double _RADIUS;
 
     public:
-        Sphere(const double3& pos, double radius, const Reflectance& reflectivity);
-        Sphere(double radius, const Reflectance& reflectivity);
-        Sphere(const double3& pos, double radius);
         Sphere(double radius = 0);
 
-        Intersection findIntersection(const double3& start, const double3& dir) override;
+        Intersection findIntersection(const double3& start, const double3& dir) const override;
 };
