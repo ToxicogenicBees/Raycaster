@@ -6,6 +6,7 @@ struct Color {
     uint8_t r, g, b;
 
     Color(uint8_t r, uint8_t g, uint8_t b);
+    Color(double r, double g, double b);
     Color(const Color& color);
     Color(uint32_t hex);
     Color();

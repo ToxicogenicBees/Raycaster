@@ -1,21 +1,28 @@
 #include "../include/Rendering/Color.h"
+#include <cmath>
 
 namespace Colors {
-    const Color RED(255, 0, 0);
-    const Color ORANGE(255, 127, 0);
-    const Color YELLOW(255, 255, 0);
-    const Color GREEN(0, 255, 0);
-    const Color CYAN(0, 255, 255);
-    const Color BLUE(0, 0, 255);
-    const Color PURPLE(255, 0, 255);
-    const Color WHITE(255, 255, 255);
-    const Color BLACK(0, 0, 0);
+    const Color RED     (1.0, 0.0, 0.0);
+    const Color ORANGE  (1.0, 0.5, 0.0);
+    const Color YELLOW  (1.0, 1.0, 0.0);
+    const Color GREEN   (0.0, 1.0, 0.0);
+    const Color CYAN    (0.0, 1.0, 1.0);
+    const Color BLUE    (0.0, 0.0, 1.0);
+    const Color PURPLE  (1.0, 0.0, 1.0);
+    const Color WHITE   (1.0, 1.0, 1.0);
+    const Color BLACK   (0.0, 0.0, 0.0);
 }
 
 Color::Color(uint8_t r, uint8_t g, uint8_t b) {
     this->r = r;
     this->g = g;
     this->b = b;
+}
+
+Color::Color(double r, double g, double b) {
+    this->r = floor(255 * r);
+    this->g = floor(255 * g);
+    this->b = floor(255 * b);
 }
 
 Color::Color(const Color& color) {
