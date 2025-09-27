@@ -2,6 +2,7 @@
 
 #include "Vector2.hpp"
 #include <stdexcept>
+#include <iostream>
 
 template <class T>
 class Matrix {
@@ -37,11 +38,21 @@ class Matrix {
 
         uint16_t rows() const { return _rows; }
         uint16_t cols() const { return _cols; }
+
+        friend std::ostream& operator<<(std::ostream& o, const Matrix<T>& m) {
+            for (uint16_t row = 0; row < m._rows; row++) {
+                for (uint16_t col = 0; col < m._cols; col++) {
+                    o << m(row, col) << (col == m._cols - 1 ? "\n" : " ");
+                }
+            }
+
+            return o;
+        }
 };
 
 template <class T>
 Matrix<T>::Matrix(uint16_t rows, uint16_t cols, const T& init_val) {
-    _data.resize(cols, rows);
+    _data.resize(rows, cols);
     _rows = rows;
     _cols = cols;
 
@@ -54,7 +65,7 @@ Matrix<T>::Matrix(uint16_t rows, uint16_t cols, const T& init_val) {
 
 template <class T>
 Matrix<T>::Matrix(uint16_t rows, uint16_t cols) {
-    _data.resize(cols, rows);
+    _data.resize(rows, cols);
     _rows = rows;
     _cols = cols;
 }
@@ -75,11 +86,11 @@ const T& Matrix<T>::operator()(uint16_t row, uint16_t col) const {
 
 template <class T>
 const T& Matrix<T>::operator()(uint16_t index) const {
-    if (_rows >= 1 || _cols >= 1)
+    if (_rows > 1 && _cols > 1)
         throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
-    if (index > (_rows > _cols ? _rows : _cols))
+    if (index >= (_rows > _cols ? _rows : _cols))
         throw std::out_of_range("Index out of range");
-    return _data[(_cols > _rows ? _cols : 0)][(_rows > _cols ? _rows : 0)];
+    return (_cols == 1 ? _data[0][index] : _data[index][0]);
 }
 
 template <class T>
@@ -91,11 +102,11 @@ T& Matrix<T>::operator()(uint16_t row, uint16_t col) {
 
 template <class T>
 T& Matrix<T>::operator()(uint16_t index) {
-    if (_rows >= 1 || _cols >= 1)
+    if (_rows > 1 && _cols > 1)
         throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
-    if (index > (_rows > _cols ? _rows : _cols))
+    if (index >= (_rows > _cols ? _rows : _cols))
         throw std::out_of_range("Index out of range");
-    return _data[(_cols > _rows ? _cols : 0)][(_rows > _cols ? _rows : 0)];
+    return (_cols == 1 ? _data[0][index] : _data[index][0]);
 }
 
 template <class T>
@@ -116,7 +127,7 @@ Matrix<T> Matrix<T>::operator+(const Matrix& m) const {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            result.at(i, j) = at(i, j) + m.at(i, j);
+            result(i, j) = (i, j) + m(i, j);
         }
     }
 
@@ -130,7 +141,7 @@ void Matrix<T>::operator+=(const Matrix& m) {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            at(i, j) += m.at(i, j);
+            (*this)(i, j) += m(i, j);
         }
     }
 }
@@ -144,7 +155,7 @@ Matrix<T> Matrix<T>::operator-(const Matrix& m) const {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            result.at(i, j) = at(i, j) - m.at(i, j);
+            result(i, j) = (*this)(i, j) - m(i, j);
         }
     }
 
@@ -158,7 +169,7 @@ void Matrix<T>::operator-=(const Matrix& m) {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            at(i, j) -= m.at(i, j);
+            (*this)(i, j) -= m(i, j);
         }
     }
 }
@@ -174,8 +185,8 @@ Matrix<T> Matrix<T>::operator*(const Matrix& m) const {
         for (uint16_t j = 0; j < m._cols; j++) {
             T sum = T();
             for (uint16_t k = 0; k < _cols; k++)
-                sum += at(i, k) * m.at(k, j);
-            result.at(i, j) = sum;
+                sum += (*this)(i, k) * m(k, j);
+            result(i, j) = sum;
         }
     }
 
@@ -188,7 +199,7 @@ Matrix<T> Matrix<T>::operator*(T s) const noexcept {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            result.at(i, j) = at(i, j) * s;
+            result(i, j) = (*this)(i, j) * s;
         }
     }
 
@@ -204,7 +215,7 @@ template <class T>
 void Matrix<T>::operator*=(T s) noexcept {
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            at(i, j) *= s;
+            (*this)(i, j) *= s;
         }
     }
 }
@@ -215,7 +226,7 @@ Matrix<T> Matrix<T>::operator/(T s) const noexcept {
 
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            result.at(i, j) = at(i, j) / s;
+            result(i, j) = (*this)(i, j) / s;
         }
     }
 
@@ -226,7 +237,7 @@ template <class T>
 void Matrix<T>::operator/=(T s) noexcept {
     for (uint16_t i = 0; i < _rows; i++) {
         for (uint16_t j = 0; j < _cols; j++) {
-            at(i, j) /= s;
+            (*this)(i, j) /= s;
         }
     }
 }
