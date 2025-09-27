@@ -15,8 +15,8 @@ class BaseObject {
         const uint16_t _ID;         // Object UUID
 
         Reflectance _ref;           // Object reflectance coefficients
-        double3 _rot;               // Rotation in radians
         double3 _pos;               // Position in units
+        double3 _rot;               // Rotation in radians
 
     public:
         static std::vector<BaseObject*> objects;    // List of all created objects
