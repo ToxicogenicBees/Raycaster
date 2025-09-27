@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <cmath>
 
 template <class T>
@@ -27,6 +28,11 @@ struct Point {
     Point normal() const;
     T magnitude() const;
     T squaredMagnitude() const;
+
+    friend std::ostream& operator<<(std::ostream& o, const Point<T>& p) {
+        o << "(" << p.x << ", " << p.y << ", " << p.z << ")";
+        return o;
+    }
 };
 
 template <class T>
