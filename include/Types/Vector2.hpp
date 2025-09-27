@@ -11,18 +11,21 @@ class Vector2 {
         uint16_t _size_x, _size_y;
 
     public:
-        Vector2(uint16_t size_x, uint16_t size_y);
+        Vector2(uint16_t size_x = 0, uint16_t size_y = 0);
         Vector2(const Point<uint16_t>& size);
         Vector2(const Vector2& vec2);
 
+        const std::vector<T>& operator[](uint16_t index) const;
         std::vector<T>& operator[](uint16_t index);
+        
+        Vector2& operator=(const Vector2& vec2);
         
         void resize(uint16_t size_x, uint16_t size_y);
         void resize(const Point<uint16_t>& size);
         void fill(const T& value);
 
-        uint16_t sizeX() { return _size_x; }
-        uint16_t sizeY() { return _size_y; }
+        uint16_t sizeX() const { return _size_x; }
+        uint16_t sizeY() const { return _size_y; }
 };
 
 template <class T>
@@ -58,8 +61,22 @@ void Vector2<T>::resize(const Point<uint16_t>& size) {
 }
 
 template <class T>
+const std::vector<T>& Vector2<T>::operator[](uint16_t index) const {
+    return _data[index];
+}
+
+template <class T>
 std::vector<T>& Vector2<T>::operator[](uint16_t index) {
     return _data[index];
+}
+
+template <class T>
+Vector2<T>& Vector2<T>::operator=(const Vector2& vec2) {
+    _size_x = vec2._size_x;
+    _size_y = vec2._size_y;
+    _data = vec2._data;
+
+    return *this;
 }
 
 template <class T>
