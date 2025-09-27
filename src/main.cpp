@@ -30,15 +30,17 @@ using namespace Colors;
 // }
 
 int main() {
+    frameBuffer.resize(SIZE_1920x1080);
+    
     // Position camera
     camera.setPosition(double3(5, 5, 5));
     camera.setLookVector(double3(0, 0, 0));
 
     // Place sphere
-    Sphere sphere(double3(0, 0, 0), 1);
+    Sphere sphere(double3(0, 0, 0), 2);
 
     // Cast rays
-    camera.castRays(3.141592 / 4);
+    camera.castRays(3.141592 / 2);
 
     return 0;
 }

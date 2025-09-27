@@ -35,7 +35,5 @@ Intersection Sphere::findIntersection(const double3& start, const double3& dir) 
         return Intersection(); // both behind ray
     double3 intersection = start + dir * t;
 
-    std::cout << "Intersection at (" << intersection.x << ", " << intersection.y << ", " << intersection.z <<")\n";
-
     return Intersection(this, intersection, (intersection - _pos).normal());
 }

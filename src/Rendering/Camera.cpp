@@ -21,7 +21,6 @@ void Camera::setPosition(const double3& pos) {
 
 void Camera::castRays(double field_of_view) {
     // Clear buffer
-    frameBuffer.resize(100, 100);
     frameBuffer.fill(Colors::BLACK);
 
     // Calculate necessary values
