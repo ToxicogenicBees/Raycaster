@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Point.hpp"
+#include "Types/Point.hpp"
 #include <stdint.h>
 #include <vector>
 
@@ -13,6 +13,7 @@ class Vector2 {
     public:
         Vector2(uint16_t size_x, uint16_t size_y);
         Vector2(const Point<uint16_t>& size);
+        Vector2(const Vector2& vec2);
 
         std::vector<T>& operator[](uint16_t index);
         
@@ -32,6 +33,13 @@ Vector2<T>::Vector2(uint16_t size_x, uint16_t size_y) {
 template <class T>
 Vector2<T>::Vector2(const Point<uint16_t>& size) {
     resize(size.x, size.y);
+}
+
+template <class T>
+Vector2<T>::Vector2(const Vector2& vec2) {
+    _size_x = vec2._size_x;
+    _size_y = vec2._size_y;
+    _data = vec2._data;
 }
 
 template <class T>
