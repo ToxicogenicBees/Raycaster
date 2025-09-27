@@ -17,7 +17,7 @@ struct Point {
     
     Point operator-(const Point& point) const;
     void operator-=(const Point& point);
-    Point operator-();
+    Point operator-() const;
     
     Point operator*(T s) const;
     void operator*=(T s);
@@ -25,6 +25,8 @@ struct Point {
     Point operator/(T s) const;
     void operator/=(T s);
     
+    Point cross(const Point& p) const;
+    T dot(const Point& p) const;
     Point normal() const;
     T magnitude() const;
     T squaredMagnitude() const;
@@ -83,7 +85,7 @@ void Point<T>::operator-=(const Point<T>& point) {
 }
 
 template <class T>
-Point<T> Point<T>::operator-() {
+Point<T> Point<T>::operator-() const {
     return Point(-x, -y, -z);
 }
 
@@ -122,17 +124,17 @@ void Point<T>::operator/=(T s) {
 }
 
 template <class T>
-Point<T> cross(const Point<T>& p1, const Point<T>& p2) {
+Point<T> Point<T>::cross(const Point<T>& p) const {
     return Point(
-        p1.y * p2.z - p1.z * p2.y,
-        p1.z * p2.x - p1.x * p2.z,
-        p1.x * p2.y - p1.y * p2.x
+        y * p.z - z * p.y,
+        z * p.x - x * p.z,
+        x * p.y - y * p.x
     );
 }
 
 template <class T>
-T dot(const Point<T>& p1, const Point<T>& p2) {
-    return (p1.x * p2.x) + (p1.y * p2.y) + (p1.z * p2.z);
+T Point<T>::dot(const Point<T>& p) const {
+    return (x * p.x) + (y * p.y) + (z * p.z);
 }
 
 template <class T>
@@ -143,10 +145,10 @@ Point<T> Point<T>::normal() const {
 
 template <class T>
 T Point<T>::magnitude() const {
-    return sqrt(x * x + y * y + z * z);
+    return std::sqrt(x * x + y * y + z * z);
 }
 
 template <class T>
 T Point<T>::squaredMagnitude() const {
-    return dot(*this, *this);
+    return dot(*this);
 }

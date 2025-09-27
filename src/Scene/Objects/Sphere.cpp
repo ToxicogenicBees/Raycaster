@@ -18,25 +18,25 @@ Intersection Sphere::findIntersection(const double3& start, const double3& dir) 
     // https://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
 
     double3 L = _points[CENTER] - start;
-    double tc = dot(L, dir);
+    double tc = L.dot(dir);
 
-    if (tc < 0)
-        return Intersection();
+    // Ray doesn't intersect with the sphere at all
+    if (tc < 0) return Intersection();
 
     double sqr_rad = (_points[RADIUS] - _points[CENTER]).squaredMagnitude();
-    double sqr_d = dot(L, L) - tc * tc;
+    double sqr_d = L.squaredMagnitude() - tc * tc;
 
-    if (sqr_d > sqr_rad)
-        return Intersection();
+    if (sqr_d > sqr_rad) return Intersection();
 
     double t1c = std::sqrt(sqr_rad - sqr_d);
     double t1 = tc - t1c;
     double t2 = tc + t1c;
 
     double t = (t1 > 0) ? t1 : t2;
-    if (t < 0) 
-        return Intersection(); // both behind ray
-    double3 intersection = start + dir * t;
 
+    // Both intersections are behing the ray, return invalid intersection
+    if (t < 0) return Intersection();
+
+    double3 intersection = start + dir * t;
     return Intersection(this, intersection, (intersection - _points[CENTER]).normal());
 }

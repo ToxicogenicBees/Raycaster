@@ -38,8 +38,8 @@ void Camera::render(const std::string& image_name) {
 
     // Calculate necessary values
     double3 look_vec_norm = (_look_vec - _pos).normal();
-    double3 right_vec = cross(look_vec_norm, _up_vec).normal();
-    double3 exact_up = cross(right_vec, look_vec_norm);
+    double3 right_vec = look_vec_norm.cross(_up_vec).normal();
+    double3 exact_up = right_vec.cross(look_vec_norm);
 
     double aspect_ratio = (double)(frameBuffer.sizeX()) / frameBuffer.sizeY();      // Aspect ratio
     double field_of_view_horiz = 2 * atan(aspect_ratio * tan(_field_of_view / 2));  // Horizontal FOV
@@ -76,7 +76,7 @@ void Camera::render(const std::string& image_name) {
 
             // Set pixel's color if an intersection was found
             if (closest.obj) {
-                frameBuffer.setPixel(i, j, Colors::WHITE);
+                frameBuffer.setPixel(i, j, closest.obj->color());
             }
         }
     }
