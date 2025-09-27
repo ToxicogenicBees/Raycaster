@@ -1,9 +1,18 @@
 #include "../../../include/Scene/Objects/BaseObject.h"
 
-std::vector<BaseObject*> BaseObject::objects;
-uint16_t BaseObject::_cur_id = 0;
+Intersection::Intersection(BaseObject* obj, double3 pos, double3 normal) {
+    this->obj = obj;
+    this->pos = pos;
+    this->normal = normal;
+}
 
-BaseObject::BaseObject(const std::string& type, const double3& pos, const double3& rot, const Reflectance& ref) : _TYPE(type), _ID(_cur_id++) {
+Intersection::Intersection() {
+    obj = nullptr;
+}
+
+std::vector<BaseObject*> BaseObject::objects;
+
+BaseObject::BaseObject(const std::string& type, const double3& pos, const double3& rot, const Reflectance& ref) : _TYPE(type) {
     objects.push_back(this);
 
     _pos = pos;
@@ -11,26 +20,26 @@ BaseObject::BaseObject(const std::string& type, const double3& pos, const double
     _rot = rot;
 }
 
-BaseObject::BaseObject(const std::string& type, const double3& pos, const Reflectance& ref) : _TYPE(type), _ID(_cur_id++) {
+BaseObject::BaseObject(const std::string& type, const double3& pos, const Reflectance& ref) : _TYPE(type) {
     objects.push_back(this);
 
     _pos = pos;
     _ref = ref;
 }
 
-BaseObject::BaseObject(const std::string& type, const Reflectance& ref) : _TYPE(type), _ID(_cur_id++) {
+BaseObject::BaseObject(const std::string& type, const Reflectance& ref) : _TYPE(type) {
     objects.push_back(this);
 
     _ref = ref;
 }
 
-BaseObject::BaseObject(const std::string& type, const double3& pos) : _TYPE(type), _ID(_cur_id++) {
+BaseObject::BaseObject(const std::string& type, const double3& pos) : _TYPE(type) {
     objects.push_back(this);
 
     _pos = pos;
 }
 
-BaseObject::BaseObject(const std::string& type) : _TYPE(type), _ID(_cur_id++) {
+BaseObject::BaseObject(const std::string& type) : _TYPE(type) {
     objects.push_back(this);
 }
 
