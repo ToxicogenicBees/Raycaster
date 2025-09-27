@@ -14,11 +14,10 @@ namespace {
 struct Intersection;
 
 class BaseObject {
-
     protected:
         std::vector<double3> _points;   // Vector of related points for this object
+        Color _color = Colors::WHITE;   // Object's color
         Reflectance _ref;               // Object's reflectance coefficients
-        Color _color;                   // Object's color
 
     public:
         static std::vector<BaseObject*> objects;    // List of all created objects
@@ -30,12 +29,15 @@ class BaseObject {
         void setReflectance(const Reflectance& ref);
         void setColor(const Color& color);
 
-        void rotate(double rx, double ry, double rz);
+        // Base translations
+        virtual void translate(double dx, double dy, double dz);
+        virtual void rotate(double rx, double ry, double rz);
+        virtual void scale(double sx, double sy, double sz);
+
+        // Derived translations
         void rotate(const double3& r);
-        void scale(double sx, double sy, double sz);
         void scale(const double3& s);
         void scale(const double s);
-        void translate(double dx, double dy, double dz);
         void translate(const double3& dp);
         
         const double3& point(uint16_t index) const { return _points[index]; }
