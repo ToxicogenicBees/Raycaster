@@ -8,6 +8,8 @@ class FrameBuffer {
     private:
         static Vector2<Color> _buffer;
 
+        static void _gammaCurrection();
+
     public:
         static void outputToFile(const std::string& image_name);
         

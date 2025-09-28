@@ -1,4 +1,6 @@
 #include "../../include/Rendering/FrameBuffer.h"
+#include <algorithm>
+#include <random>
 #include <iostream>
 #include <fstream>
 
@@ -17,6 +19,17 @@ namespace ImageSize {
 Vector2<Color> FrameBuffer::_buffer(ImageSize::SIZE_1080x1080);
 FrameBuffer frameBuffer;
 
+void FrameBuffer::_gammaCurrection() {
+    for (uint16_t y = 0; y < sizeY(); y++) {
+        for (uint16_t x = 0; x < sizeX(); x++) {
+            // Gamma correction
+            _buffer[y][x].r = std::clamp(std::pow(_buffer[y][x].r, 1.0 / 2.2), 0.0, 1.0);
+            _buffer[y][x].g = std::clamp(std::pow(_buffer[y][x].g, 1.0 / 2.2), 0.0, 1.0);
+            _buffer[y][x].b = std::clamp(std::pow(_buffer[y][x].b, 1.0 / 2.2), 0.0, 1.0);
+        } 
+    }
+}
+
 void FrameBuffer::outputToFile(const std::string& image_name) {
     std::ofstream img((image_name + ".ppm").c_str(), std::ios::binary);
 
@@ -28,16 +41,15 @@ void FrameBuffer::outputToFile(const std::string& image_name) {
     // File header: P6 = binary RGB
     img << "P6\n" << sizeX() << " " << sizeY() << "\n255\n";
 
+    // Image processing
+    _gammaCurrection();
+
     // Write pixel data
     for (uint16_t y = 0; y < sizeY(); y++) {
         for (uint16_t x = 0; x < sizeX(); x++) {
-            unsigned char rgb[3] = {
-                _buffer[y][x].r,
-                _buffer[y][x].g,
-                _buffer[y][x].b
-            };
-            
-            img.write(reinterpret_cast<char*>(rgb), 3);
+            img.put(255 * _buffer[y][x].r);
+            img.put(255 * _buffer[y][x].g);
+            img.put(255 * _buffer[y][x].g);
         }
     }
 
