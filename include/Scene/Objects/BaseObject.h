@@ -21,8 +21,6 @@ struct Reflectivity {
 };
 
 struct BaseObject {
-    static std::vector<BaseObject*> objects;    // List of all created objects
-
     std::vector<double3> points;                // Vector of related points for this object
     
     Color color = Colors::WHITE;                // Object's color
@@ -30,8 +28,6 @@ struct BaseObject {
     double shininess = 20;                      // Shininess coefficient
     double specular = 0.9;                      // Specular reflection
     double ambient = 0.1;                       // Ambient reflection
-
-    BaseObject();
 
     virtual Intersection findIntersection(const double3& start, const double3& dir) const = 0;
 

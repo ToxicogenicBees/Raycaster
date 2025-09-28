@@ -1,12 +1,6 @@
 #include "../../../include/Scene/Objects/BaseObject.h"
 #include "../../../include/Scene/Transformations.h"
 
-std::vector<BaseObject*> BaseObject::objects;
-
-BaseObject::BaseObject() {
-    objects.push_back(this);
-}
-
 void BaseObject::rotate(double rx, double ry, double rz) {
     auto rotX = Transformations::rotateX(rx);
     auto rotY = Transformations::rotateY(ry);
