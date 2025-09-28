@@ -23,7 +23,7 @@ int main() {
     sphere.shininess = 30;
 
     // Place plane
-    Plane plane(sphere_center - double3(0, 0, sphere_radius));
+    Plane plane(-sphere_radius);
     plane.color = Color(0.0, 1.0, 0.2);
 
     // Place lights

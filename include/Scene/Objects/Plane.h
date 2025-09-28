@@ -4,8 +4,8 @@
 
 class Plane : public BaseObject {
     public:
-        Plane(double3 normal, double3 origin);
-        Plane(double3 origin);
+        Plane(double3 normal, double distance);
+        Plane(double distance);
 
         void translate(double dx, double dy, double dz) override;
         void rotate(double rx, double ry, double rz) override;

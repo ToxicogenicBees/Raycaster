@@ -2,18 +2,19 @@
 #include <cmath>
 
 namespace {
-    constexpr const uint16_t NORMAL = 0;
-    constexpr const uint16_t ORIGIN = 1;
+    constexpr const uint16_t ORIGIN = 0;
+    constexpr const uint16_t NORMAL = 1;
 }
 
-Plane::Plane(double3 normal, double3 origin) {
-    points.push_back(normal.normal());      // Insert normal vector "point" for plane
-    points.push_back(origin);               // Insert distance "point" for plane
+Plane::Plane(double3 normal, double distance) {
+    double3 true_normal = normal.normal();
+    points.push_back(true_normal * distance);   // Insert distance "point" for plane
+    points.push_back(true_normal);              // Insert normal vector "point" for plane
 }
 
-Plane::Plane(double3 origin) {
-    points.push_back(double3(0, 0, 1));     // Insert normal vector "point" for plane
-    points.push_back(origin);               // Insert distance "point" for plane
+Plane::Plane(double distance) {
+    points.push_back(double3(0, 0, distance));  // Insert distance "point" for plane
+    points.push_back(double3(0, 0, 1));         // Insert normal vector "point" for plane
 }
 
 void Plane::translate(double dx, double dy, double dz) {
