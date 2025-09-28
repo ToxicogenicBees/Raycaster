@@ -13,13 +13,6 @@ namespace {
     using Points = std::vector<double3>;
 }
 
-struct Reflectivity {
-    double ambient = 1;
-    double diffusion = 0.8;
-    double specular = 0.8;
-    double shininess = 20;
-};
-
 struct BaseObject {
     std::vector<double3> points;                // Vector of related points for this object
     
