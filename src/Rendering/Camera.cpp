@@ -102,12 +102,12 @@ void Camera::render(const std::string& image_name) {
                     double diff = std::max(0.0, light_vec.dot(intersection.normal));
                     
                     // Phong shading calculations for diffusive and specular reflection components
-                    r += f_att * (light->int_r.diffusion * intersection.obj->diffusion * intersection.obj->color.r * diff
-                        + light->int_r.specular * intersection.obj->specular * intersection.obj->color.r * spec);
-                    g += f_att * (light->int_g.diffusion * intersection.obj->diffusion * intersection.obj->color.g * diff
-                        + light->int_g.specular * intersection.obj->specular * intersection.obj->color.g * spec);
-                    b += f_att * (light->int_b.diffusion * intersection.obj->diffusion * intersection.obj->color.b * diff
-                        + light->int_b.specular * intersection.obj->specular * intersection.obj->color.b * spec);
+                    r += f_att * (light->diffusion * light->color.r * intersection.obj->diffusion * intersection.obj->color.r * diff
+                        + light->specular * light->color.r * intersection.obj->specular * intersection.obj->color.r * spec);
+                    g += f_att * (light->diffusion * light->color.g * intersection.obj->diffusion * intersection.obj->color.g * diff
+                        + light->specular * light->color.g * intersection.obj->specular * intersection.obj->color.g * spec);
+                    b += f_att * (light->diffusion * light->color.b * intersection.obj->diffusion * intersection.obj->color.b * diff
+                        + light->specular * light->color.b * intersection.obj->specular * intersection.obj->color.b * spec);
                 }
 
                 frameBuffer.setPixel(i, j, Color(r, g, b));

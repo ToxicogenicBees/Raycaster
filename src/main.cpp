@@ -27,7 +27,8 @@ int main() {
     plane.color = Color(0.0, 1.0, 0.2);
 
     // Place lights
-    Light light1(double3(1.0, 3.0, 5.0));
+    Light light;
+    light.translate(double3(1.0, 3.0, 5.0));
     
     // Rendering the scene
     camera.render("CameraOutput");
