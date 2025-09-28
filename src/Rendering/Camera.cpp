@@ -3,6 +3,7 @@
 #include "../../include/Rendering/Camera.h"
 #include "../../include/Types/Vector2.hpp"
 #include "../../include/Scene/Light.h"
+#include <algorithm>
 #include <cmath>
 
 double Camera::_field_of_view = 1.57079633; // 90 degrees
@@ -60,23 +61,56 @@ void Camera::render(const std::string& image_name) {
             double3 view_dir = (x * right_vec + y * exact_up + look_vec_norm).normal();
             
             // Iterate over each object, store closest intersection
-            Intersection closest;
+            Intersection intersection;
 
             for (BaseObject* obj : BaseObject::objects) {
                 // Attempt to intersect a ray with this object
                 Intersection inter = obj->findIntersection(_pos, view_dir);
                 
                 // If the intersection succeeded, and is the closest thus far, mark it
-                if (inter.obj && !closest.obj)
-                    closest = inter;
-                else if (inter.obj && (_pos - inter.pos).squaredMagnitude() < (_pos - closest.pos).squaredMagnitude()) {
-                    closest = inter;
+                if (inter.obj && !intersection.obj)
+                    intersection = inter;
+                else if (inter.obj && (_pos - inter.pos).squaredMagnitude() < (_pos - intersection.pos).squaredMagnitude()) {
+                    intersection = inter;
                 }
             }
 
             // Set pixel's color if an intersection was found
-            if (closest.obj) {
-                frameBuffer.setPixel(i, j, closest.obj->color());
+            if (intersection.obj) {
+                double r, g, b;
+
+                // Phong shading calculations for ambient reflection
+                r = Light::ambient_intensity * intersection.obj->ambient * intersection.obj->color.r;
+                g = Light::ambient_intensity * intersection.obj->ambient * intersection.obj->color.g;
+                b = Light::ambient_intensity * intersection.obj->ambient * intersection.obj->color.b;
+                
+                // Iterate over each light to determine their contributions
+                for (Light* light : Light::lights) {
+                    double3 light_dist = (light->position - intersection.pos);
+                    double3 light_vec = light_dist.normal();
+
+                    // Reflection and view vector
+                    double3 reflection_vec = (2 * (intersection.normal.dot(light_vec)) * intersection.normal - light_vec).normal();
+                    double3 view_vec = (_pos - intersection.pos).normal();
+
+                    // Attenuation coefficients: a = 0, b = 0, c = 5
+                    // double f_att = 1 / light_dist.squaredMagnitude();
+                    double f_att = 1;
+
+                    // Calculate diffusive and specular components (clamped to avoid subtracting color when dot products go negative)
+                    double spec = std::pow(std::max(0.0, view_vec.dot(reflection_vec)), intersection.obj->shininess);
+                    double diff = std::max(0.0, light_vec.dot(intersection.normal));
+                    
+                    // Phong shading calculations for diffusive and specular reflection components
+                    r += f_att * (light->int_r.diffusion * intersection.obj->diffusion * intersection.obj->color.r * diff
+                        + light->int_r.specular * intersection.obj->specular * intersection.obj->color.r * spec);
+                    g += f_att * (light->int_g.diffusion * intersection.obj->diffusion * intersection.obj->color.g * diff
+                        + light->int_g.specular * intersection.obj->specular * intersection.obj->color.g * spec);
+                    b += f_att * (light->int_b.diffusion * intersection.obj->diffusion * intersection.obj->color.b * diff
+                        + light->int_b.specular * intersection.obj->specular * intersection.obj->color.b * spec);
+                }
+
+                frameBuffer.setPixel(i, j, Color(r, g, b));
             }
         }
     }
