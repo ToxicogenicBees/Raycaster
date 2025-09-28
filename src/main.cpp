@@ -1,37 +1,34 @@
-#include "../include/Rendering/FrameBuffer.h"
-#include "../include/Scene/BasicObjects.h"
-#include <random>
-#include <string>
+#include "../include/Scene/Scene.h"
 
-using namespace ImageSize;
-using namespace Colors;
-
-int main() {
-    frameBuffer.resize(SIZE_1920x1080); // Adjusting image size
-
-    double3 sphere_center(0.0, 0.0, 0.0);
-    double sphere_radius = 2;
-    
+int main(int argc, char **argv) {
     // Position camera
-    camera.translate(sphere_center + double3(5, 5, 5));
-    camera.lookAt(sphere_center);
+    Camera camera;
+    camera.position = double3(5, 5, 5);
+    camera.look_vec = double3(0, 0, 0);
 
     // Place sphere (radius 2)
     Sphere sphere(2);
-    sphere.color = Color(1.0, 0.1, 0.1);
+    sphere.color = Color(1, 0.1, 0.1);
     sphere.specular = 0.9;
     sphere.shininess = 30;
 
     // Place plane
-    Plane plane(-sphere_radius);
-    plane.color = Color(0.0, 1.0, 0.2);
+    Plane plane(-2);
+    plane.color = Colors::CYAN;
 
     // Place lights
     Light light;
-    light.translate(double3(1.0, 3.0, 5.0));
+    light.translate(1, 3, 5);
     
     // Rendering the scene
-    camera.render("CameraOutput");
+    scene.addObject(&camera);
+    scene.addObject(&sphere);
+    scene.addObject(&plane);
+    scene.addObject(&light);
+
+    // Render file
+    std::string file_name = (argc > 1 ? argv[1] : "out");
+    scene.render(file_name);
 
     return 0;
 }
