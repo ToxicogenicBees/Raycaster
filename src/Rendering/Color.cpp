@@ -13,16 +13,10 @@ namespace Colors {
     const Color BLACK   (0.0, 0.0, 0.0);
 }
 
-Color::Color(uint8_t r, uint8_t g, uint8_t b) {
+Color::Color(double r, double g, double b) {
     this->r = r;
     this->g = g;
     this->b = b;
-}
-
-Color::Color(double r, double g, double b) {
-    this->r = floor(255 * r);
-    this->g = floor(255 * g);
-    this->b = floor(255 * b);
 }
 
 Color::Color(const Color& color) {
@@ -31,14 +25,8 @@ Color::Color(const Color& color) {
     b = color.b;
 }
 
-Color::Color(uint32_t hex) {
-    r = (hex & 0x00FF0000) >> 16;
-    g = (hex & 0x0000FF00) >> 8;
-    b = (hex & 0x000000FF);
-}
-
 Color::Color() {
-    r = g = b = 0;
+    r = g = b = 0.0;
 }
 
 Color& Color::operator=(const Color& color) {
