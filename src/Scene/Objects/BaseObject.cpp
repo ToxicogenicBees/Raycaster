@@ -13,7 +13,7 @@ void BaseObject::rotate(double rx, double ry, double rz) {
     auto rotZ = Transformations::rotateZ(rz);
     auto rotation = rotZ * rotY * rotX;
 
-    for (double3& point : _points)
+    for (double3& point : points)
         Transformations::apply(rotation, point);
 }
 
@@ -24,7 +24,7 @@ void BaseObject::rotate(const double3& r) {
 void BaseObject::translate(double dx, double dy, double dz) {
     auto translation = Transformations::translation(dx, dy, dz);
 
-    for (double3& point : _points)
+    for (double3& point : points)
         Transformations::apply(translation, point);
 }
 
@@ -35,7 +35,7 @@ void BaseObject::translate(const double3& dp) {
 void BaseObject::scale(double sx, double sy, double sz) {
     auto scaling = Transformations::scale(sx, sy, sz);
 
-    for (double3& point : _points)
+    for (double3& point : points)
         Transformations::apply(scaling, point);
 }
 
@@ -45,14 +45,6 @@ void BaseObject::scale(const double3& s) {
 
 void BaseObject::scale(const double s) {
     scale(s, s, s);
-}
-
-void BaseObject::setReflectance(const Reflectance& ref) {
-    _ref = ref;
-}
-
-void BaseObject::setColor(const Color& color) {
-    _color = color;
 }
 
 Intersection::Intersection(const BaseObject* obj, double3 pos, double3 normal) {
