@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Rendering/Color.h"
 #include "../../Types/Point.hpp"
+#include "../../Types/Color.h"
 #include <string>
 #include <vector>
 
