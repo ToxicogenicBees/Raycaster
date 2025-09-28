@@ -34,7 +34,7 @@ void FrameBuffer::outputToFile(const std::string& image_name) {
     std::ofstream img((image_name + ".ppm").c_str(), std::ios::binary);
 
     if (!img.is_open()) {
-        std::cerr << "Failed to create image file\n";
+        std::cout << "Failed to create image " << image_name << std::endl;
         return;
     }
 
@@ -54,7 +54,6 @@ void FrameBuffer::outputToFile(const std::string& image_name) {
     }
 
     img.close();
-    std::cout << "New image file created: " << image_name << ".ppm\n";
 }
 
 void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
