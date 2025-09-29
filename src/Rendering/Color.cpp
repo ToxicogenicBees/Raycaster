@@ -1,4 +1,4 @@
-#include "../../include/Types/Color.h"
+#include "../../include/Rendering/Color.h"
 #include <cmath>
 
 namespace Colors {
