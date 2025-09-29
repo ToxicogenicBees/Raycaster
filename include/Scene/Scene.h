@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SceneDescription.h"
 #include "BasicObjects.h"
 #include <string>
 
@@ -8,23 +9,25 @@ class Scene {
         static std::vector<BaseObject*> _objects;
         static std::vector<Camera*> _cameras;
         static std::vector<Light*> _lights;
-        static std::vector<Color*> _colors;
 
-        static double _ambient_intensity;
+        static Point<uint16_t> _size;
         static bool _attenuation;
+        static double _ambience;
         static double _fov;
 
-        static Intersection _findIntersectionAt(Camera* camera, uint16_t x, uint16_t y);
-        static Color _phongReflection(Camera* camera, const Intersection& intersection);
-        static void _parseSceneFile(const std::string& file_name);
-
+        
     public:
+        friend class PhongShading;
+        
+        static void parseSceneFile(const std::string& file_name);
+
         static void addObject(BaseObject* obj);
         static void addObject(Camera* camera);
         static void addObject(Light* light);
 
-        static void setAttenuation(bool state);
-        static void render(const std::string& file_name);
+        static void setRenderSize(const Point<uint16_t> size);
+        static void setRenderSize(uint16_t sx, uint16_t sy);
+        static void setAttenuation(bool attenuation);
+        static void setAmbience(double ambience);
+        static void setFOV(double fov);
 };
-
-extern Scene scene;

@@ -1,10 +1,14 @@
+#include "../include/Rendering/PhongShading.h"
 #include "../include/Scene/Scene.h"
 
 int main(int argc, char **argv) {
+    // Determine file name
+    std::string file_name = (argc > 1 ? argv[1] : "out");
+
     // Position camera
     Camera camera;
-    camera.position = double3(5, 5, 5);
-    camera.look_vec = double3(0, 0, 0);
+    camera.positionAt(5.0, 5.0, 5.0);
+    camera.lookAt(0.0, 0.0, 0.0);
 
     // Place sphere (radius 2)
     Sphere sphere(2);
@@ -20,15 +24,14 @@ int main(int argc, char **argv) {
     Light light;
     light.translate(1, 3, 5);
     
-    // Rendering the scene
-    scene.addObject(&camera);
-    scene.addObject(&sphere);
-    scene.addObject(&plane);
-    scene.addObject(&light);
+    // Rendering the scene ( replaces Scene::parseSceneFile(file_name) )
+    Scene::addObject(&camera);
+    Scene::addObject(&sphere);
+    Scene::addObject(&plane);
+    Scene::addObject(&light);
 
-    // Render file
-    std::string file_name = (argc > 1 ? argv[1] : "out");
-    scene.render(file_name);
+    // Render scene
+    PhongShading::renderWithSimpleShading(file_name);
 
     return 0;
 }
