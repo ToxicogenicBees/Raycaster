@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../../Types/Point.hpp"
-#include "../../Types/Color.h"
-#include <vector>
+#include "../../Rendering/Color.h"
+#include "PointObject.h"
 
-using double3 = Point<double>;
+class Light : public PointObject {
+    private:
+        Color _color = Colors::WHITE;
+        double _diffusion = 1;
+        double _specular = 1;
 
-struct Light {
-    double3 position = double3(0, 0, 0);    // Position in units
-    Color color = Colors::WHITE;            // Light's color
-    
-    double diffusion = 1;                   // Diffusion intensity
-    double specular = 1;                    // Specular intensity
-
-    void translate(double dx, double dy, double dz);
-    void translate(const double3& dp);
+    public:
+        friend class PhongShading;
+        
+        void setColor(const Color& color);
+        void setDiffusion(double diffusion);
+        void setSpecular(double specular);
 };

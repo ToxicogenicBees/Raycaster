@@ -1,27 +1,56 @@
-#include "../../../include/Scene/Objects/BaseObject.h"
-#include "../../../include/Rendering/FrameBuffer.h"
 #include "../../../include/Scene/Objects/Camera.h"
-#include "../../../include/Scene/Objects/Light.h"
-#include "../../../include/Types/Vector2.hpp"
 #include <algorithm>
 #include <cmath>
 
-double3 Camera::rayThroughPixel(uint16_t x, uint16_t y, double fov) const {
-    double3 look_vec_norm = (look_vec - position).normal();
-    double3 right_vec = look_vec_norm.cross(up_vec).normal();
-    double3 exact_up = right_vec.cross(look_vec_norm);
+void Camera::_updateOrientation() {
+    _look_vec_norm = (_look_vec - _position).normal();
+    _right_vec = _look_vec_norm.cross(_up_vec).normal();
+    _exact_up = _right_vec.cross(_look_vec_norm);
+}
 
+void Camera::preRenderInit(const FrameBuffer& frameBuffer, double fov) {
     double aspect_ratio = (double)(frameBuffer.sizeX()) / frameBuffer.sizeY();      // Aspect ratio
-    double fov_horiz = 2 * atan(aspect_ratio * tan(fov / 2));  // Horizontal FOV
+    double fov_horiz = 2 * std::atan(aspect_ratio * std::tan(fov / 2));  // Horizontal FOV
 
-    double tan_fov_x = tan(0.5 * fov_horiz);
-    double tan_fov_y = tan(0.5 * fov);
+    _tan_fov_x = std::tan(0.5 * fov_horiz);
+    _tan_fov_y = std::tan(0.5 * fov);
+}
 
+void Camera::setWorldUp(double x, double y, double z) {
+    setWorldUp(double3(x, y, z));
+}
+
+void Camera::setWorldUp(const double3& up_vec) {
+    _up_vec = up_vec;
+    _updateOrientation();
+}
+
+void Camera::lookAt(double x, double y, double z) {
+    lookAt(double3(x, y, z));
+}
+
+void Camera::lookAt(const double3& point) {
+    _look_vec = point;
+    _updateOrientation();
+}
+
+void Camera::positionAt(const double3& point) {
+    PointObject::positionAt(point);
+    _updateOrientation();
+}
+
+void Camera::translate(const double3& dp) {
+    PointObject::positionAt(dp);
+    _updateOrientation();
+}
+
+
+double3 Camera::rayThroughPixel(const FrameBuffer& frameBuffer, uint16_t x, uint16_t y) const {
     double s_x = (x + 0.5) / frameBuffer.sizeX();
     double s_y = (y + 0.5) / frameBuffer.sizeY();
 
-    double x2 = (2 * s_x - 1) * tan_fov_x;
-    double y2 = (1 - 2 * s_y) * tan_fov_y;
+    double x2 = (2 * s_x - 1) * _tan_fov_x;
+    double y2 = (1 - 2 * s_y) * _tan_fov_y;
 
-    return (x2 * right_vec + y2 * exact_up + look_vec_norm).normal();
+    return (x2 * _right_vec + y2 * _exact_up + _look_vec_norm).normal();
 }
