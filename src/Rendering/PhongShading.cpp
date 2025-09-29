@@ -1,5 +1,6 @@
 #include "../../include/Rendering/PhongShading.h"
 #include "../../include/Rendering/FrameBuffer.h"
+#include "../../include/Scene/Scene.h"
 
 FrameBuffer PhongShading::_frameBuffer;
 
@@ -26,12 +27,12 @@ Intersection PhongShading::_findIntersectionAt(Camera* camera, uint16_t x, uint1
     return intersection;
 }
 
-Color PhongShading::regularI(Camera* camera, const Intersection& intersection) {
+Color PhongShading::_regularI(Camera* camera, const Intersection& intersection) {
     // Phong ambient reflection
     Color color(
-        Scene::_ambience * intersection.obj->ambient * intersection.obj->color.r,
-        Scene::_ambience * intersection.obj->ambient * intersection.obj->color.g,
-        Scene::_ambience * intersection.obj->ambient * intersection.obj->color.b
+        Scene::_ambience * intersection.obj->_ambience * intersection.obj->_color.r,
+        Scene::_ambience * intersection.obj->_ambience * intersection.obj->_color.g,
+        Scene::_ambience * intersection.obj->_ambience * intersection.obj->_color.b
     );
     
     // Iterate over each light to determine their contributions
@@ -47,20 +48,25 @@ Color PhongShading::regularI(Camera* camera, const Intersection& intersection) {
         double f_att = (Scene::_attenuation ? 5 / light_dist.squaredMagnitude() : 1);
 
         // Calculate diffusive and specular components (clamped to avoid subtracting color when dot products go negative)
-        double spec = std::pow(std::max(0.0, view_vec.dot(reflection_vec)), intersection.obj->shininess);
+        double spec = std::pow(std::max(0.0, view_vec.dot(reflection_vec)), intersection.obj->_shininess);
         double diff = std::max(0.0, light_vec.dot(intersection.normal));
         
         // Phong shading calculations for diffusive and specular reflection components
-        color.r += f_att * (light->_diffusion * light->_color.r * intersection.obj->diffusion * intersection.obj->color.r * diff
-            + light->_specular * light->_color.r * intersection.obj->specular * intersection.obj->color.r * spec);
-        color.g += f_att * (light->_diffusion * light->_color.g * intersection.obj->diffusion * intersection.obj->color.g * diff
-            + light->_specular * light->_color.g * intersection.obj->specular * intersection.obj->color.g * spec);
-        color.b += f_att * (light->_diffusion * light->_color.b * intersection.obj->diffusion * intersection.obj->color.b * diff
-            + light->_specular * light->_color.b * intersection.obj->specular * intersection.obj->color.b * spec);
+        color.r += f_att * (light->_diffusion * light->_color.r * intersection.obj->_diffusion * intersection.obj->_color.r * diff
+            + light->_specular * light->_color.r * intersection.obj->_specular * intersection.obj->_color.r * spec);
+        color.g += f_att * (light->_diffusion * light->_color.g * intersection.obj->_diffusion * intersection.obj->_color.g * diff
+            + light->_specular * light->_color.g * intersection.obj->_specular * intersection.obj->_color.g * spec);
+        color.b += f_att * (light->_diffusion * light->_color.b * intersection.obj->_diffusion * intersection.obj->_color.b * diff
+            + light->_specular * light->_color.b * intersection.obj->_specular * intersection.obj->_color.b * spec);
     }
 
     // Return color
     return color;
+}
+
+Color PhongShading::_recursiveI() {
+    // TODO: Implement recursive calculation
+    return Colors::BLACK;
 }
 
 void PhongShading::renderWithSimpleShading(const std::string& file_name) {
@@ -88,7 +94,7 @@ void PhongShading::renderWithSimpleShading(const std::string& file_name) {
                 Intersection intersection = _findIntersectionAt(camera, i, j);
 
                 // Set pixel's color at the intersection point
-                if (intersection.obj) _frameBuffer.setPixel(i, j, regularI(camera, intersection));
+                if (intersection.obj) _frameBuffer.setPixel(i, j, _regularI(camera, intersection));
             }
         }
 
@@ -96,4 +102,9 @@ void PhongShading::renderWithSimpleShading(const std::string& file_name) {
         _frameBuffer.outputToFile(new_img_name);
         cur_camera_id++;
     }
+}
+
+void PhongShading::renderWithRecursiveShading(const std::string& file_name) {
+    // TODO: Implement recursive shading
+    std::cout << "Failed to render image " << file_name << ".ppm\n";
 }

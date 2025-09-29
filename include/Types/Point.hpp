@@ -5,34 +5,156 @@
 
 template <class T>
 struct Point {
+    // The x-, y-, and z-components of the point
     T x, y, z;
 
-    Point(T x = 0.0, T y = 0.0, T z = 0.0);
+    /***
+     * @brief Creates a point with the desired x-, y-, and z-components
+     * 
+     * @param x     The desired x-component
+     * @param y     The desired y-component
+     * @param z     The desired z-component
+     */
+    Point(T x = T(), T y = T(), T z = T());
+
+    /***
+     * @brief Creates a point copying the values of another point
+     * 
+     * @param point The point being copied
+     */
     Point(const Point& point);
 
+    /***
+     * @brief Overloaded assignment operator
+     * 
+     * @param point Another point object
+     * 
+     * @return A reference to this point
+     */
     Point& operator=(const Point& point);
     
+    /***
+     * @brief Overloaded addition operator
+     * 
+     * @param point Another point object
+     * 
+     * @return The resulting point
+     */
     Point operator+(const Point& point) const;
+
+    /***
+     * @brief Overloaded chained addition + assignment operator
+     * 
+     * @param point Another point object
+     */
     void operator+=(const Point& point);
     
+    /***
+     * @brief Overloaded subtraction operator
+     * 
+     * @param point Another point object
+     * 
+     * @return The resulting point
+     */
     Point operator-(const Point& point) const;
+
+    /***
+     * @brief Overloaded chained subtraction + assignment operator
+     * 
+     * @param point Another point object
+     */
     void operator-=(const Point& point);
+
+    /***
+     * @brief Overloaded unary negation operator
+     * 
+     * @param point Another point object
+     * 
+     * @return The resulting point
+     */
     Point operator-() const;
     
+    /***
+     * @brief Overloaded multiplication operator
+     * 
+     * @param s     A scalar value
+     * 
+     * @return The resulting point
+     */
     Point operator*(T s) const;
+
+    /***
+     * @brief Overloaded chained multiplication + assignment operator
+     * 
+     * @param s     A scalar value
+     */
     void operator*=(T s);
     
+    /***
+     * @brief Overloaded division operator
+     * 
+     * @param s     A scalar value
+     * 
+     * @return The resulting point
+     */
     Point operator/(T s) const;
+
+    /***
+     * @brief Overloaded chained division + assignment operator
+     * 
+     * @param s     A scalar value
+     */
     void operator/=(T s);
     
-    Point cross(const Point& p) const;
-    T dot(const Point& p) const;
+    /***
+     * @brief Calculate the cross product between this point and another point
+     * 
+     * @param point Another point object
+     * 
+     * @return The cross product
+     */
+    Point cross(const Point& point) const;
+
+    /***
+     * @brief Calculate the dot product between this point and another point
+     * 
+     * @param point Another point object
+     * 
+     * @return The dot product
+     */
+    T dot(const Point& point) const;
+
+    /***
+     * @brief Calculate the normal of this point
+     * 
+     * @return The normal of this point
+     */
     Point normal() const;
+
+    /***
+     * @brief Calculate the magnitude of this point
+     * 
+     * @return The magnitude of this point
+     */
     T magnitude() const;
+
+    /***
+     * @brief Calculate the squared magnitude of this point
+     * 
+     * @return The squared magnitude of this point
+     */
     T squaredMagnitude() const;
 
-    friend std::ostream& operator<<(std::ostream& o, const Point<T>& p) {
-        o << "(" << p.x << ", " << p.y << ", " << p.z << ")";
+    /***
+     * @brief Overloaded insertion operator
+     * 
+     * @param o     A reference to an output stream
+     * @param point The point being output to the stream
+     * 
+     * @result A reference to the output stream being output to
+     */
+    friend std::ostream& operator<<(std::ostream& o, const Point<T>& point) {
+        o << "(" << point.x << ", " << point.y << ", " << point.z << ")";
         return o;
     }
 };
@@ -90,8 +212,8 @@ Point<T> Point<T>::operator-() const {
 }
 
 template <class T>
-Point<T> operator*(T s, const Point<T>& p) {
-    return p * s;
+Point<T> operator*(T s, const Point<T>& point) {
+    return point * s;
 }
 
 template <class T>
@@ -107,8 +229,8 @@ void Point<T>::operator*=(T s) {
 }
 
 template <class T>
-Point<T> operator/(T s, const Point<T>& p) {
-    return p / s;
+Point<T> operator/(T s, const Point<T>& point) {
+    return point / s;
 }
 
 template <class T>
@@ -124,17 +246,17 @@ void Point<T>::operator/=(T s) {
 }
 
 template <class T>
-Point<T> Point<T>::cross(const Point<T>& p) const {
+Point<T> Point<T>::cross(const Point<T>& point) const {
     return Point(
-        y * p.z - z * p.y,
-        z * p.x - x * p.z,
-        x * p.y - y * p.x
+        y * point.z - z * point.y,
+        z * point.x - x * point.z,
+        x * point.y - y * point.x
     );
 }
 
 template <class T>
-T Point<T>::dot(const Point<T>& p) const {
-    return (x * p.x) + (y * p.y) + (z * p.z);
+T Point<T>::dot(const Point<T>& point) const {
+    return (x * point.x) + (y * point.y) + (z * point.z);
 }
 
 template <class T>
@@ -145,7 +267,7 @@ Point<T> Point<T>::normal() const {
 
 template <class T>
 T Point<T>::magnitude() const {
-    return std::sqrt(x * x + y * y + z * z);
+    return std::sqrt(dot(*this));
 }
 
 template <class T>

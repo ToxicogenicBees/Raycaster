@@ -12,17 +12,17 @@ int main(int argc, char **argv) {
 
     // Place sphere (radius 2)
     Sphere sphere(2);
-    sphere.color = Color(1, 0.1, 0.1);
-    sphere.specular = 0.9;
-    sphere.shininess = 30;
+    sphere.setColor(Color(1, 0.1, 0.1));
+    sphere.setSpecular(0.9);
+    sphere.setShininess(30);
 
     // Place plane
     Plane plane(-2);
-    plane.color = Colors::CYAN;
+    plane.setColor(Colors::CYAN);
 
     // Place lights
     Light light;
-    light.translate(1, 3, 5);
+    light.positionAt(1, 3, 5);
     
     // Rendering the scene ( replaces Scene::parseSceneFile(file_name) )
     Scene::addObject(&camera);

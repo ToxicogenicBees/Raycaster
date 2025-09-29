@@ -1,5 +1,4 @@
 #include "../../include/Rendering/Color.h"
-#include <cmath>
 
 namespace Colors {
     const Color RED     (1.0, 0.0, 0.0);

@@ -12,7 +12,24 @@ class Light : public PointObject {
     public:
         friend class PhongShading;
         
+        /**
+         * @brief Sets the color of the light
+         * 
+         * @param color     The desired color
+         */
         void setColor(const Color& color);
+
+        /**
+         * @brief Sets the diffusion of the object
+         * 
+         * @param diffusion The desired diffusion
+         */
         void setDiffusion(double diffusion);
+
+        /**
+         * @brief Sets the specular of the object
+         * 
+         * @param specular  The desired specular
+         */
         void setSpecular(double specular);
 };

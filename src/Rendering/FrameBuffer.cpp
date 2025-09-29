@@ -39,16 +39,14 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     img.close();
 }
 
+void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
+    _buffer[y][x] = color;
+}
 
 void FrameBuffer::resize(uint16_t size_x, uint16_t size_y) {
     _buffer.resize(size_x, size_y);
 }
 
- void FrameBuffer::fill(const Color& color) {
+void FrameBuffer::fill(const Color& color) {
     _buffer.fill(color);
-}
-
-
-void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
-    _buffer[y][x] = color;
 }

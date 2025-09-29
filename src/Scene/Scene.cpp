@@ -1,4 +1,3 @@
-#include "../../include/Rendering/FrameBuffer.h"
 #include "../../include/Scene/Scene.h"
 
 std::vector<BaseObject*> Scene::_objects;

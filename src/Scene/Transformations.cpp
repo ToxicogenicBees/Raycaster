@@ -2,25 +2,28 @@
 #include <cmath>
 
 Matrix<double> baseMat() {
-    Matrix<double> matrix(4, 4);
+    Matrix<double> matrix(4, 4, 0);
     for (uint16_t i = 0; i < 4; i++)
         matrix(i, i) = 1;
     return matrix;
 }
 
 void Transformations::apply(Matrix<double> transformation, Point<double>& point) {
-    Matrix<double> homog_coord(4, 1);
+    Matrix<double> homog_coord(4, 1, 1);
 
     homog_coord(0) = point.x;
     homog_coord(1) = point.y;
     homog_coord(2) = point.z;
-    homog_coord(3) = 1;
 
     homog_coord = transformation * homog_coord;
 
     point.x = homog_coord(0) / homog_coord(3);
     point.y = homog_coord(1) / homog_coord(3);
     point.z = homog_coord(2) / homog_coord(3);
+}
+
+Matrix<double> Transformations::translation(const Point<double>& dp) {
+    return Transformations::translation(dp.x, dp.y, dp.z);
 }
 
 Matrix<double> Transformations::translation(double dx, double dy, double dz) {
@@ -33,8 +36,8 @@ Matrix<double> Transformations::translation(double dx, double dy, double dz) {
     return transformation;
 }
 
-Matrix<double> Transformations::translation(const Point<double>& dp) {
-    return Transformations::translation(dp.x, dp.y, dp.z);
+Matrix<double> Transformations::scale(Point<double> s) {
+    return Transformations::scale(s.x, s.y, s.z);
 }
 
 Matrix<double> Transformations::scale(double sx, double sy, double sz) {
@@ -45,10 +48,6 @@ Matrix<double> Transformations::scale(double sx, double sy, double sz) {
     transformation(2, 2) *= sz;
 
     return transformation;
-}
-
-Matrix<double> Transformations::scale(Point<double> s) {
-    return Transformations::scale(s.x, s.y, s.z);
 }
 
 Matrix<double> Transformations::scale(double s) {

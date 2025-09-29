@@ -11,34 +11,200 @@ class Matrix {
         Vector2<T> _data;           // Matrix entries
 
     public:
+        /***
+         * @brief Creates a matrix with the desired rows and columns, populated with an initial value
+         * 
+         * @param rows      The number of rows in the matrix
+         * @param cols      The number of columns in the matrix
+         * @param init_val  The initial value populating the matrix
+         */
         Matrix(uint16_t rows, uint16_t cols, const T& init_val);
+
+        /***
+         * @brief Creates a matrix with the desired rows and columns
+         * 
+         * @param rows      The number of rows in the matrix
+         * @param cols      The number of columns in the matrix
+         */
         Matrix(uint16_t rows, uint16_t cols);
+
+        /***
+         * @brief Creates a matrix copying the values of another matrix
+         * 
+         * @param m     The matrix being copied
+         */
         Matrix(const Matrix& m);
 
+        /***
+         * @brief Overloaded function operator, accessing an element of a constant 2D matrix
+         *        Throws std::out_of_range if the provided indexes are invalid
+         * 
+         * @param row   The desired row
+         * @param col   The desired column
+         * 
+         * @return Constant reference to the desired item
+         */
         const T& operator()(uint16_t row, uint16_t col) const;
+
+        /***
+         * @brief Overloaded function operator, accessing an element of a constant column/row vector
+         *        Throws std::out_of_range if the provided indexes are invalid
+         *        Throws std::invalid_argument if the matrix is not a column/row vector
+         * 
+         * @param row   The desired element in the column/row vector
+         * 
+         * @return Constant reference to the desired item
+         */
         const T& operator()(uint16_t index) const;
+
+        /***
+         * @brief Overloaded function operator, accessing an element of a 2D matrix
+         *        Throws std::out_of_range if the provided indexes are invalid
+         * 
+         * @param row   The desired row
+         * @param col   The desired column
+         * 
+         * @return Reference to the desired item
+         */
         T& operator()(uint16_t row, uint16_t col);
+
+        /***
+         * @brief Overloaded function operator, accessing an element of a column/row vector
+         *        Throws std::out_of_range if the provided indexes are invalid
+         *        Throws std::invalid_argument if the matrix is not a column/row vector
+         * 
+         * @param row   The desired element in the column/row vector
+         * 
+         * @return Reference to the desired item
+         */
         T& operator()(uint16_t index);
 
+        /***
+         * @brief Overloaded assignment operator
+         * 
+         * @param m     Another matrix object
+         * 
+         * @return A reference to this matrix
+         */
         Matrix& operator=(const Matrix& m);
 
+        /***
+         * @brief Overloaded addition operator
+         *        Throws std::invalid_argument if the matrices are different sizes
+         * 
+         * @param m     Another matrix object
+         * 
+         * @return The resulting matrix
+         */
         Matrix operator+(const Matrix& m) const;
+
+        /***
+         * @brief Overloaded chained addition + assignment operator
+         *        Throws std::invalid_argument if the matrices are different sizes
+         * 
+         * @param m     Another matrix object
+         */
         void operator+=(const Matrix& m);
 
+        /***
+         * @brief Overloaded subtraction operator
+         *        Throws std::invalid_argument if the matrices are different sizes
+         * 
+         * @param m     Another matrix object
+         * 
+         * @return The resulting matrix
+         */
         Matrix operator-(const Matrix& m) const;
+
+        /***
+         * @brief Overloaded chained subtraction + assignment operator
+         *        Throws std::invalid_argument if the matrices are different sizes
+         * 
+         * @param m     Another matrix object
+         */
         void operator-=(const Matrix& m);
 
+        /***
+         * @brief Overloaded unary negation operator
+         * 
+         * @param m     Another matrix object
+         * 
+         * @return The resulting matrix
+         */
+        Matrix operator-() const;
+
+        /***
+         * @brief Overloaded multiplication operator
+         *        Throws std::invalid_argument if the matrices are incompatible sizes
+         * 
+         * @param m     Another matrix object
+         * 
+         * @return The resulting matrix
+         */
         Matrix operator*(const Matrix& m) const;
+
+        /***
+         * @brief Overloaded multiplication operator
+         * 
+         * @param s     A scalar value
+         * 
+         * @return The resulting matrix
+         */
         Matrix operator*(T s) const noexcept;
+
+        /***
+         * @brief Overloaded chained multiplication + assignment operator
+         *        Throws std::invalid_argument if the matrices are incompatible sizes
+         * 
+         * @param m     Another matrix object
+         */
         void operator*=(const Matrix& m);
+
+        /***
+         * @brief Overloaded chained multiplication + assignment operator
+         * 
+         * @param s     A scalar value
+         */
         void operator*=(T s) noexcept;
 
+        /***
+         * @brief Overloaded division operator
+         * 
+         * @param s     A scalar value
+         * 
+         * @return The resulting matrix
+         */
         Matrix operator/(T s) const noexcept;
+
+        /***
+         * @brief Overloaded chained division + assignment operator
+         * 
+         * @param s     A scalar value
+         */
         void operator/=(T s) noexcept;
 
+        /***
+         * @brief Get the number of rows in this matrix
+         * 
+         * @return The number of rows in this matrix
+         */
         uint16_t rows() const { return _rows; }
+
+        /***
+         * @brief Get the number of columns in this matrix
+         * 
+         * @return The number of columns in this matrix
+         */
         uint16_t cols() const { return _cols; }
 
+        /***
+         * @brief Overloaded insertion operator
+         * 
+         * @param o     A reference to an output stream
+         * @param m     The matrix being output to the stream
+         * 
+         * @result A reference to the output stream being output to
+         */
         friend std::ostream& operator<<(std::ostream& o, const Matrix<T>& m) {
             for (uint16_t row = 0; row < m._rows; row++) {
                 for (uint16_t col = 0; col < m._cols; col++) {
@@ -53,14 +219,10 @@ class Matrix {
 template <class T>
 Matrix<T>::Matrix(uint16_t rows, uint16_t cols, const T& init_val) {
     _data.resize(rows, cols);
+    _data.fill(init_val);
+    
     _rows = rows;
     _cols = cols;
-
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
-            set(i, j, init_val);
-        }
-    }
 }
 
 template <class T>
@@ -172,6 +334,19 @@ void Matrix<T>::operator-=(const Matrix& m) {
             (*this)(i, j) -= m(i, j);
         }
     }
+}
+
+template <class T>
+Matrix<T> Matrix<T>::operator-() const {
+    Matrix result(_rows, _cols);
+
+    for (uint16_t i = 0; i < _rows; i++) {
+        for (uint16_t j = 0; j < _cols; j++) {
+            result(i, j) = -(*this)(i, j);
+        }
+    }
+
+    return result;
 }
 
 template <class T>

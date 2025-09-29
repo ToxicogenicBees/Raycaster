@@ -1,44 +1,64 @@
 #include "../../../include/Scene/Objects/BaseObject.h"
 #include "../../../include/Scene/Transformations.h"
 
-void BaseObject::rotate(double rx, double ry, double rz) {
-    auto rotX = Transformations::rotateX(rx);
-    auto rotY = Transformations::rotateY(ry);
-    auto rotZ = Transformations::rotateZ(rz);
-    auto rotation = rotZ * rotY * rotX;
+void BaseObject::translate(const double3& dp) {
+    auto translation = Transformations::translation(dp);
 
-    for (double3& point : points)
-        Transformations::apply(rotation, point);
+    for (double3& point : _points)
+        Transformations::apply(translation, point);
+}
+
+void BaseObject::translate(double dx, double dy, double dz) {
+    translate(double3(dx, dy, dz));
+}
+
+void BaseObject::scale(const double3& s) {
+    auto scaling = Transformations::scale(s);
+
+    for (double3& point : _points)
+        Transformations::apply(scaling, point);
+}
+
+void BaseObject::scale(double sx, double sy, double sz) {
+    scale(double3(sx, sy, sz));
+}
+
+void BaseObject::scale(const double s) {
+    scale(s, s, s);
 }
 
 void BaseObject::rotate(const double3& r) {
     rotate(r.x, r.y, r.z);
 }
 
-void BaseObject::translate(double dx, double dy, double dz) {
-    auto translation = Transformations::translation(dx, dy, dz);
+void BaseObject::rotate(double rx, double ry, double rz) {
+    auto rotX = Transformations::rotateX(rx);
+    auto rotY = Transformations::rotateY(ry);
+    auto rotZ = Transformations::rotateZ(rz);
+    auto rotation = rotZ * rotY * rotX;
 
-    for (double3& point : points)
-        Transformations::apply(translation, point);
+    for (double3& point : _points)
+        Transformations::apply(rotation, point);
 }
 
-void BaseObject::translate(const double3& dp) {
-    translate(dp.x, dp.y, dp.z);
+void BaseObject::setColor(const Color& color) {
+    _color = color;
 }
 
-void BaseObject::scale(double sx, double sy, double sz) {
-    auto scaling = Transformations::scale(sx, sy, sz);
-
-    for (double3& point : points)
-        Transformations::apply(scaling, point);
+void BaseObject::setDiffusion(double diffusion) {
+    _diffusion = diffusion;
 }
 
-void BaseObject::scale(const double3& s) {
-    scale(s.x, s.y, s.z);
+void BaseObject::setShininess(double shininess) {
+    _shininess = shininess;
 }
 
-void BaseObject::scale(const double s) {
-    scale(s, s, s);
+void BaseObject::setSpecular(double specular) {
+    _specular = specular;
+}
+
+void BaseObject::setAmbience(double ambience) {
+    _ambience = ambience;
 }
 
 Intersection::Intersection(const BaseObject* obj, double3 pos, double3 normal) {
