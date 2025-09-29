@@ -32,21 +32,23 @@ void Plane::scale(double sx, double sy, double sz) {
     points[NORMAL] = points[NORMAL].normal();
 }
 
-Intersection Plane::findIntersection(const double3& start, const double3& dir) const {
-    double n_dot_v = points[NORMAL].dot(dir);
+Intersection Plane::findIntersection(const double3& start, const double3& view_dir) const {
+    // https://www.cl.cam.ac.uk/teaching/1999/AGraphHCI/SMAG/node2.html#SECTION00023500000000000000
+    
+    double n_dot_v = points[NORMAL].dot(view_dir);
 
-    // If the ray is parallel to the plane (n_dot_v is zero, with some tolerance for f-p error), return invalid intersection
+    // Ray is parallel to the plane if n_dot_v is 0. Return invalid intersection.
     if (std::fabs(n_dot_v) < 1e-8) return Intersection();
 
-    // Find "time" of intersection
-    double t = -points[NORMAL].dot(start - points[ORIGIN]) / n_dot_v;
+    // Find time of intersection
+    double t = points[NORMAL].dot(points[ORIGIN] - start) / n_dot_v;
 
-    // If the intersection is behind the ray, return invalid intersection
+    // Ray intersects plane behind if t < 0, return invalid intersection
     if (t < 0) return Intersection();
 
     // Return the proper intersection
     double3 intersectionNormal = n_dot_v > 0 ? -points[NORMAL] : points[NORMAL];
-    double3 intersection = start + t * dir;
+    double3 intersection = start + t * view_dir;
 
     return Intersection(this, intersection, intersectionNormal);
 }
