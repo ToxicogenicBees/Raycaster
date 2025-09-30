@@ -5,9 +5,9 @@
 
 Color FrameBuffer::_gammaCorrection(const Color& color) const{
     return Color(
-        std::clamp(std::pow(color.r, 1.0 / 2.2), 0.0, 1.0),
-        std::clamp(std::pow(color.g, 1.0 / 2.2), 0.0, 1.0),
-        std::clamp(std::pow(color.b, 1.0 / 2.2), 0.0, 1.0)
+        std::clamp(std::pow(color.x, 1.0 / 2.2), 0.0, 1.0),
+        std::clamp(std::pow(color.y, 1.0 / 2.2), 0.0, 1.0),
+        std::clamp(std::pow(color.z, 1.0 / 2.2), 0.0, 1.0)
     );
 }
 
@@ -29,9 +29,9 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
         for (uint16_t x = 0; x < sizeX(); x++) {
             corrected_color = _gammaCorrection(_buffer[y][x]);
             
-            img.put(255 * corrected_color.r);
-            img.put(255 * corrected_color.g);
-            img.put(255 * corrected_color.g);
+            img.put(255 * corrected_color.x);
+            img.put(255 * corrected_color.y);
+            img.put(255 * corrected_color.z);
         }
     }
 

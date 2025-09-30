@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Rendering/Color.h"
 #include "../Types/Vector2.hpp"
+#include "../Types/Point.hpp"
 #include <string>
 
 class FrameBuffer {

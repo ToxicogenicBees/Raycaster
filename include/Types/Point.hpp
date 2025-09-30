@@ -73,6 +73,15 @@ struct Point {
      * @return The resulting point
      */
     Point operator-() const;
+
+    /***
+     * @brief Overloaded multiplication operator [Hadamard (component-wise) product]
+     * 
+     * @param point Another point object
+     * 
+     * @return The Hadamard (component-wise) product of the points
+     */
+    Point operator*(const Point& point) const;
     
     /***
      * @brief Overloaded multiplication operator
@@ -84,11 +93,27 @@ struct Point {
     Point operator*(T s) const;
 
     /***
+     * @brief Overloaded chained multiplication + assignment operator [Hadamard (component-wise) product]
+     * 
+     * @param point Another point object
+     */
+    void operator*=(const Point& point);
+
+    /***
      * @brief Overloaded chained multiplication + assignment operator
      * 
      * @param s     A scalar value
      */
     void operator*=(T s);
+
+    /***
+     * @brief Overloaded division operator [Hadamard (component-wise) quotient]
+     * 
+     * @param point Another point object
+     * 
+     * @return The Hadamard (component-wise) quotient of the points
+     */
+    Point operator/(const Point& point) const;
     
     /***
      * @brief Overloaded division operator
@@ -98,6 +123,13 @@ struct Point {
      * @return The resulting point
      */
     Point operator/(T s) const;
+
+    /***
+     * @brief Overloaded chained division + assignment operator [Hadamard (component-wise) quotient]
+     * 
+     * @param point Another point object
+     */
+    void operator/=(const Point& point);
 
     /***
      * @brief Overloaded chained division + assignment operator
@@ -159,6 +191,9 @@ struct Point {
     }
 };
 
+using double3 = Point<double>;
+using Color = Point<double>;
+
 template <class T>
 Point<T>::Point(T x, T y, T z) {
     this->x = x;
@@ -212,6 +247,11 @@ Point<T> Point<T>::operator-() const {
 }
 
 template <class T>
+Point<T> Point<T>::operator*(const Point& point) const {
+    return Point(x * point.x, y * point.y, z * point.z);
+}
+
+template <class T>
 Point<T> operator*(T s, const Point<T>& point) {
     return point * s;
 }
@@ -222,10 +262,22 @@ Point<T> Point<T>::operator*(T s) const {
 }
 
 template <class T>
+void Point<T>::operator*=(const Point& point) {
+    x *= point.x;
+    y *= point.y;
+    z *= point.z;
+}
+
+template <class T>
 void Point<T>::operator*=(T s) {
     x *= s;
     y *= s;
     z *= s;
+}
+
+template <class T>
+Point<T> Point<T>::operator/(const Point& point) const {
+    return Point(x / point.x, y / point.y, z / point.z);
 }
 
 template <class T>
@@ -236,6 +288,13 @@ Point<T> operator/(T s, const Point<T>& point) {
 template <class T>
 Point<T> Point<T>::operator/(T s) const {
     return Point(x / s, y / s, z / s);
+}
+
+template <class T>
+void Point<T>::operator/=(const Point& point) {
+    x /= point.x;
+    y /= point.y;
+    z /= point.z;
 }
 
 template <class T>
