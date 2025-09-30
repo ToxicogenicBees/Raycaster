@@ -1,15 +1,11 @@
 #pragma once
 
-#include "../../Rendering/Color.h"
+#include "../../Rendering/Ray.h"
 #include "../../Types/Point.hpp"
 #include <vector>
 
 // Forward declaration of intersection struct
 struct Intersection;
-
-namespace {
-    using double3 = Point<double>;
-}
 
 class BaseObject {
     protected:
@@ -17,7 +13,9 @@ class BaseObject {
         std::vector<double3> _points;   // Vector of related points for this object
         
         // Reflection variables
-        Color _color = Colors::WHITE;   // Object's color
+        Color _color = Color(1, 1, 1);  // Object's color
+        double _transparency = 0;       // Object transparency
+        double _reflectance = 0;        // Surface reflectance
         double _diffusion = 0.6;        // Diffusion reflection
         double _shininess = 20;         // Shininess coefficient
         double _specular = 0.9;         // Specular reflection
@@ -27,14 +25,13 @@ class BaseObject {
         friend class PhongShading;
 
         /**
-         * @brief Finds the intersection between a camera's view ray and this object, if one exists
+         * @brief Finds the intersection between a view ray and this object, if one exists
          * 
-         * @param start     The origin of the view ray
-         * @param view_dir  The direction of the view ray
+         * @param ray   The view ray
          * 
          * @return An intersection object containing the results of the intersection calculation
          */
-        virtual Intersection findIntersection(const double3& start, const double3& view_dir) const = 0;
+        virtual Intersection findIntersection(const Ray& ray) const = 0;
 
         /**
          * @brief Translates the object by a desired (x, y, z) distance
@@ -97,6 +94,29 @@ class BaseObject {
          * @param color     The desired color
          */
         void setColor(const Color& color);
+
+        /**
+         * @brief Sets the color of the object
+         * 
+         * @param r         The desired red color
+         * @param g         The desired red color
+         * @param b         The desired red color
+         */
+        void setColor(double r, double g, double b);
+
+        /**
+         * @brief Sets the reflectance of the object
+         * 
+         * @param diffusion The desired reflectance
+         */
+        void setReflectance(double reflectance);
+
+        /**
+         * @brief Sets the transparency of the object
+         * 
+         * @param diffusion The desired transparency
+         */
+        void setTransparency(double transparency);
 
         /**
          * @brief Sets the diffusion of the object

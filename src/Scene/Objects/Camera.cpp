@@ -35,14 +35,14 @@ void Camera::translate(const double3& dp) {
     _updateOrientation();
 }
 
-double3 Camera::rayThroughPixel(const FrameBuffer& frameBuffer, uint16_t x, uint16_t y) const {
-    double s_x = (x + 0.5) / frameBuffer.sizeX();
-    double s_y = (y + 0.5) / frameBuffer.sizeY();
+Ray Camera::rayThroughPixel(const Point<uint16_t>& window_size, uint16_t x, uint16_t y) const {
+    double s_x = (x + 0.5) / window_size.x;
+    double s_y = (y + 0.5) / window_size.y;
 
     double x2 = (2 * s_x - 1) * _tan_fov_x;
     double y2 = (1 - 2 * s_y) * _tan_fov_y;
 
-    return (x2 * _right_vec + y2 * _exact_up + _look_vec_norm).normal();
+    return Ray(_position, (x2 * _right_vec + y2 * _exact_up + _look_vec_norm).normal());
 }
 
 void Camera::preRenderInit(const FrameBuffer& frameBuffer, double fov) {

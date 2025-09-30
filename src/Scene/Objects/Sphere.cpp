@@ -1,4 +1,5 @@
 #include "../../../include/Scene/Objects/Sphere.h"
+#include <stdint.h>
 
 namespace {
     constexpr const uint16_t CENTER = 0;
@@ -13,17 +14,18 @@ Sphere::Sphere(double radius) {
     _points.push_back(double3(0, 0, radius));
 }
 
-Intersection Sphere::findIntersection(const double3& start, const double3& view_dir) const {
+Intersection Sphere::findIntersection(const Ray& ray) const {
     // https://kylehalladay.com/blog/tutorial/math/2013/12/24/Ray-Sphere-Intersection.html
 
-    double3 L = _points[CENTER] - start;
-    double tc = L.dot(view_dir);
+    double3 L = _points[CENTER] - ray.origin;
+    double tc = L.dot(ray.dir);
 
     double sqr_rad = (_points[RADIUS] - _points[CENTER]).squaredMagnitude();
     double sqr_d = L.squaredMagnitude() - tc * tc;
 
     if (sqr_d > sqr_rad) return Intersection();
 
+    // Finding the "times" of intersection (sphere has at most 2 intersections with a ray)
     double t1c = std::sqrt(sqr_rad - sqr_d);
     double t1 = tc - t1c;
     double t2 = tc + t1c;
@@ -33,6 +35,6 @@ Intersection Sphere::findIntersection(const double3& start, const double3& view_
     // Both intersections are behing the ray, return invalid intersection
     if (t < 0) return Intersection();
 
-    double3 intersection = start + view_dir * t;
+    double3 intersection = ray.origin + ray.dir * t;
     return Intersection(this, intersection, (intersection - _points[CENTER]).normal());
 }

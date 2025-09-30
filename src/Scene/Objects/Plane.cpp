@@ -1,4 +1,5 @@
 #include "../../../include/Scene/Objects/Plane.h"
+#include <stdint.h>
 #include <cmath>
 
 namespace {
@@ -17,23 +18,23 @@ Plane::Plane(double distance) {
     _points.push_back(double3(0, 0, 1));         // Insert normal vector "point" for plane
 }
 
-Intersection Plane::findIntersection(const double3& start, const double3& view_dir) const {
+Intersection Plane::findIntersection(const Ray& ray) const {
     // https://www.cl.cam.ac.uk/teaching/1999/AGraphHCI/SMAG/node2.html#SECTION00023500000000000000
     
-    double n_dot_v = _points[NORMAL].dot(view_dir);
+    double n_dot_v = _points[NORMAL].dot(ray.dir);
 
     // Ray is parallel to the plane if n_dot_v is 0. Return invalid intersection.
     if (std::fabs(n_dot_v) < 1e-8) return Intersection();
 
     // Find time of intersection
-    double t = _points[NORMAL].dot(_points[ORIGIN] - start) / n_dot_v;
+    double t = _points[NORMAL].dot(_points[ORIGIN] - ray.origin) / n_dot_v;
 
     // Ray intersects plane behind if t < 0, return invalid intersection
     if (t < 0) return Intersection();
 
     // Return the proper intersection
     double3 intersectionNormal = n_dot_v > 0 ? -_points[NORMAL] : _points[NORMAL];
-    double3 intersection = start + t * view_dir;
+    double3 intersection = ray.origin + t * ray.dir;
 
     return Intersection(this, intersection, intersectionNormal);
 }

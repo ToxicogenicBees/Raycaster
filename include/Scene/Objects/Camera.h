@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Rendering/FrameBuffer.h"
+#include "../../Rendering/Ray.h"
 #include "PointObject.h"
 
 namespace {
@@ -78,13 +79,13 @@ class Camera : public PointObject {
         /***
          * @brief Calculates the unit view vector passing through a pixel of the screen
          * 
-         * @param frameBuffer   Reference to the current working frame buffer
+         * @param window_size   The height and width of the window of pixels
          * @param x             The desired pixel's x-coordinate
          * @param y             The desired pixel's y-coordinate
          * 
-         * @return The direction of the ray passing through the pixel
+         * @return The ray passing through the pixel, starting at the camera
          */
-        double3 rayThroughPixel(const FrameBuffer& frameBuffer, uint16_t x, uint16_t y) const;
+        Ray rayThroughPixel(const Point<uint16_t>& window_size, uint16_t x, uint16_t y) const;
 
         /***
          * @brief Runs pre-rendering calculations required for finding the camera's view vector through pixels

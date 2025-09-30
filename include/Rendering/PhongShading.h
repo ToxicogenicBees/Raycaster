@@ -2,22 +2,30 @@
 
 #include "../Scene/BasicObjects.h"
 #include "FrameBuffer.h"
-#include "Color.h"
 #include <string>
 
 class PhongShading {
     private:
-        // The frame buffer used to store pixel data
-        static FrameBuffer _frameBuffer;
+        static uint16_t _MAX_RECURSIVE_DEPTH;   // Maximum recursive ray depth
+        static FrameBuffer _frame_buffer;        // The frame buffer used to store pixel data
 
-        // Finds the object intersecting the view ray through a pixel for a specific camera
-        static Intersection _findIntersectionAt(Camera* camera, uint16_t x, uint16_t y);
+        // Finds the closest intersection with an object on a specified ray
+        static Intersection _closestIntersectionOnRay(const Ray& ray);
+
+        // Determines if a light ray is obstructed by an object
+        static bool _lightRayObstructed(Light* light, const Intersection& intersection);
+
+        // Calculate the reflection vector between a vector and a normal vector
+        static double3 _reflectionBetween(const double3& vec, const double3& normal);
 
         // Recursive Phong shading
-        static Color _recursiveI();
+        static Color _recursiveI(const Intersection& intersection, const Ray& view_ray, uint16_t depth = 0);
 
         // Regular Phong shading
-        static Color _regularI(Camera* camera, const Intersection& intersection);
+        static Color _regularI(const Intersection& intersection, const Ray& view_ray);
+
+        // Rendering helper function
+        static void _render(const std::string& file_name, bool use_recursive_shading);
 
     public:
         /***

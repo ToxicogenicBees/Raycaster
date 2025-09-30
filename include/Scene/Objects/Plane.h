@@ -27,14 +27,13 @@ class Plane : public BaseObject {
         Plane(double distance);
         
         /**
-         * @brief Finds the intersection between a camera's view ray and this object, if one exists
+         * @brief Finds the intersection between a view ray and this object, if one exists
          * 
-         * @param start     The origin of the view ray
-         * @param view_dir  The direction of the view ray
+         * @param ray   The view ray
          * 
          * @return An intersection object containing the results of the intersection calculation
          */
-        Intersection findIntersection(const double3& start, const double3& view_dir) const override;
+        Intersection findIntersection(const Ray& ray) const override;
 
         /**
          * @brief Translates the object by a desired (x, y, z) distance

@@ -45,6 +45,18 @@ void BaseObject::setColor(const Color& color) {
     _color = color;
 }
 
+void BaseObject::setColor(double r, double g, double b) {
+    _color = Color(r, g, b);
+}
+
+void BaseObject::setTransparency(double transparency) {
+    _transparency = transparency;
+}
+
+void BaseObject::setReflectance(double reflectance) {
+    _reflectance = reflectance;
+}
+
 void BaseObject::setDiffusion(double diffusion) {
     _diffusion = diffusion;
 }

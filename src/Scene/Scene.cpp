@@ -4,8 +4,9 @@ std::vector<BaseObject*> Scene::_objects;
 std::vector<Camera*> Scene::_cameras;
 std::vector<Light*> Scene::_lights;
 
-Point<uint16_t> Scene::_size = Point<uint16_t>(1920, 1080);
+Point<uint16_t> Scene::_size = Point<uint16_t>(512, 512);
 bool Scene::_attenuation = false;
+bool Scene::_shadows = false;
 double Scene::_fov = 1.57079633;
 double Scene::_ambience = 0.1;
 
@@ -37,14 +38,18 @@ void Scene::setRenderSize(uint16_t sx, uint16_t sy) {
     _size = Point<uint16_t>(sx, sy);
 }
 
-void Scene::setAttenuation(bool attenuation) {
-    _attenuation = attenuation;
-}
-
 void Scene::setAmbience(double ambience) {
     _ambience = ambience;
 }
 
 void Scene::setFOV(double fov) {
     _fov = fov;
+}
+
+void Scene::setAttenuation(bool attenuation) {
+    _attenuation = attenuation;
+}
+
+void Scene::setShadows(bool shadows) {
+    _shadows = shadows;
 }
