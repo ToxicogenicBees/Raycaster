@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
     // Place plane
     Plane plane(-2);
     plane.setColor(Color(0, 1, 1));
-    plane.setReflectance(0.05);
+    plane.setReflectance(0.35);
 
     // Place lights
     Light light1;
