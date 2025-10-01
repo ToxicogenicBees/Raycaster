@@ -2,14 +2,13 @@
 
 #include "../../Rendering/FrameBuffer.h"
 #include "../../Rendering/Ray.h"
-#include "PointObject.h"
+#include "../../Types/Point.hpp"
 
-namespace {
-    using double3 = Point<double>;
-}
-
-class Camera : public PointObject {
+class Camera {
     private:
+        // Position
+        double3 _position = double3(0, 0, 0);
+
         // Independent orientation vectors         
         double3 _look_vec = double3(0, 0, 0);
         double3 _up_vec = double3(0, 0, 1);
@@ -25,10 +24,49 @@ class Camera : public PointObject {
         void _updateOrientation();
 
     public:
-        using PointObject::translate;
-        using PointObject::positionAt;
-
         friend class PhongShading;
+
+        /***
+         * @brief Creates and places a camera into the scene
+         */
+        Camera();
+
+        /***
+         * @brief Destroys and removes the camera from the scene
+         */
+        ~Camera();
+
+        /***
+         * @brief Places the camera at a desired (x, y, z) position
+         * 
+         * @param point The desired position
+         */
+        virtual void positionAt(const double3& point);
+
+        /***
+         * @brief Places the camera at a desired (x, y, z) position
+         * 
+         * @param x    The desired x-position
+         * @param y    The desired y-position
+         * @param z    The desired z-position
+         */
+        void positionAt(double x, double y, double z);
+
+        /***
+         * @brief Translates the camera by a desired (x, y, z) distance
+         * 
+         * @param dp   The desired position change
+         */
+        virtual void translate(const double3& dp);
+
+        /***
+         * @brief Translates the camera by a desired (x, y, z) distance
+         * 
+         * @param dx   The desired x-position change
+         * @param dy   The desired y-position change
+         * @param dz   The desired z-position change
+         */
+        void translate(double dx, double dy, double dz);
 
         /***
          * @brief Sets the camera's up-vector
@@ -61,20 +99,6 @@ class Camera : public PointObject {
          * @param z     The desired focal z-position
          */
         void lookAt(double x, double y, double z);
-
-        /***
-         * @brief Places the object at a desired (x, y, z) position
-         * 
-         * @param point The desired position
-         */
-        void positionAt(const double3& point) override;
-
-        /***
-         * @brief Translates the object by a desired (x, y, z) distance
-         * 
-         * @param dp   The desired position change
-         */
-        void translate(const double3& dp) override;
 
         /***
          * @brief Calculates the unit view vector passing through a pixel of the screen

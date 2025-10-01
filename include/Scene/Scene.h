@@ -1,8 +1,11 @@
 #pragma once
 
-#include "../../include/Scene/BasicObjects.h"
-
 #include <string>
+#include <vector>
+
+class BaseObject;
+class Camera;
+class Light;
 
 class Scene {
     private:
@@ -41,14 +44,14 @@ class Scene {
         /***
          * @brief Adds a camera to the scene
          * 
-         * @param obj   Pointer to the camera added to the scene
+         * @param camera    Pointer to the camera added to the scene
          */
         static void addObject(Camera* camera);
 
         /***
          * @brief Adds a light to the scene
          * 
-         * @param obj   Pointer to the light added to the scene
+         * @param light     Pointer to the light added to the scene
          */
         static void addObject(Light* light);
 
@@ -62,14 +65,14 @@ class Scene {
         /***
          * @brief Removes a camera from the scene
          * 
-         * @param obj   Pointer to the camera removed from the scene
+         * @param camera    Pointer to the camera removed from the scene
          */
         static void removeObject(Camera* camera);
 
         /***
          * @brief Removes a light from the scene
          * 
-         * @param obj   Pointer to the light removed from the scene
+         * @param light     Pointer to the light removed from the scene
          */
         static void removeObject(Light* light);
 

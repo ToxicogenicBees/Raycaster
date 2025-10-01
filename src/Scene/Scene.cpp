@@ -1,6 +1,8 @@
 #include "../../include/Scene/BasicObjects.h"
 #include "../../include/Scene/Scene.h"
 
+#include <algorithm>
+
 std::vector<BaseObject*> Scene::_objects;
 std::vector<Camera*> Scene::_cameras;
 std::vector<Light*> Scene::_lights;
@@ -10,6 +12,14 @@ double3 Scene::_attenuation(1, 0, 0);
 bool Scene::_shadows = false;
 double Scene::_fov = 1.57079633;
 double Scene::_ambience = 0.1;
+
+// Helper function for removing from container
+template <class Container, class Object>
+void removeFrom(Container& container, Object* object) {
+    auto it = std::find(container.begin(), container.end(), object);
+    if (it != container.end())
+        container.erase(it);
+}
 
 void Scene::parseSceneFile(const std::string& file_name) {
     std::cout << "Parsing file " << file_name << std::endl;
@@ -32,42 +42,15 @@ void Scene::addObject(Light* light) {
 }
 
 void Scene::removeObject(BaseObject* obj) {
-    uint16_t index = _objects.size() + 1;
-    for (uint16_t i = 0; i < _objects.size(); i++) {
-        if (_objects[i] == obj) {
-            index = i;
-            break;
-        }
-    }
-
-    if (index < _objects.size())
-        _objects.erase(_objects.begin() + index);
+    removeFrom(_objects, obj);
 }
 
 void Scene::removeObject(Camera* camera) {
-    uint16_t index = _cameras.size() + 1;
-    for (uint16_t i = 0; i < _cameras.size(); i++) {
-        if (_cameras[i] == camera) {
-            index = i;
-            break;
-        }
-    }
-
-    if (index < _cameras.size())
-        _cameras.erase(_cameras.begin() + index);
+    removeFrom(_cameras, camera);
 }
 
 void Scene::removeObject(Light* light) {
-    uint16_t index = _lights.size() + 1;
-    for (uint16_t i = 0; i < _lights.size(); i++) {
-        if (_lights[i] == light) {
-            index = i;
-            break;
-        }
-    }
-
-    if (index < _lights.size())
-        _lights.erase(_lights.begin() + index);
+    removeFrom(_lights, light);
 }
 
 void Scene::setRenderSize(const size3 size) {

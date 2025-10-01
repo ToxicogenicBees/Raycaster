@@ -1,5 +1,4 @@
 // Base object types
-#include "Objects/PointObject.h"
 #include "Objects/BaseObject.h"
 
 // Point objects

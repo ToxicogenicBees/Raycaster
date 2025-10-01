@@ -24,6 +24,16 @@ class BaseObject {
     public:
         friend class PhongShading;
 
+        /***
+         * @brief Creates and places a light into the scene
+         */
+        BaseObject();
+
+        /***
+         * @brief Destroys and removes the object from the scene
+         */
+        virtual ~BaseObject();
+
         /**
          * @brief Finds the intersection between a view ray and this object, if one exists
          * 

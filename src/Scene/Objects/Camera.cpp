@@ -1,10 +1,38 @@
 #include "../../../include/Scene/Objects/Camera.h"
+#include "../../../include/Scene/Scene.h"
+
 #include <cmath>
 
 void Camera::_updateOrientation() {
     _look_vec_norm = (_look_vec - _position).normal();
     _right_vec = _look_vec_norm.cross(_up_vec).normal();
     _exact_up = _right_vec.cross(_look_vec_norm);
+}
+
+Camera::Camera() {
+    Scene::addObject(this);
+}
+
+Camera::~Camera() {
+    Scene::removeObject(this);
+}
+
+void Camera::positionAt(const double3& point) {
+    _position = point;
+    _updateOrientation();
+}
+
+void Camera::positionAt(double x, double y, double z) {
+    positionAt(double3(x, y, z));
+}
+
+void Camera::translate(const double3& dp) {
+    _position += dp;
+    _updateOrientation();
+}
+
+void Camera::translate(double dx, double dy, double dz) {
+    translate(double3(dx, dy, dz));
 }
 
 void Camera::setWorldUp(const double3& up_vec) {
@@ -23,16 +51,6 @@ void Camera::lookAt(const double3& point) {
 
 void Camera::lookAt(double x, double y, double z) {
     lookAt(double3(x, y, z));
-}
-
-void Camera::positionAt(const double3& point) {
-    PointObject::positionAt(point);
-    _updateOrientation();
-}
-
-void Camera::translate(const double3& dp) {
-    PointObject::positionAt(dp);
-    _updateOrientation();
 }
 
 Ray Camera::rayThroughPixel(const size3& window_size, uint16_t x, uint16_t y) const {

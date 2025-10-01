@@ -1,6 +1,9 @@
 #include "../include/Rendering/PhongShading.h"
 #include "../include/Scene/Scene.h"
 
+const double SPHERE_REFLECTIVITY = 0.8;
+const double PLANE_REFLECTIVITY = 0.65;
+
 int main(int argc, char **argv) {
     // Determine file name
     std::string file_name = (argc > 1 ? argv[1] : "out");
@@ -14,24 +17,24 @@ int main(int argc, char **argv) {
     Sphere sphere1(2.5);
     sphere1.translate(0.47, 5.36, 0.5);
     sphere1.setColor(Color(1, 1, 1));
-    sphere1.setReflectance(0.45);
+    sphere1.setReflectance(SPHERE_REFLECTIVITY);
 
     // Place sphere (radius 4)
     Sphere sphere2(4);
     sphere2.translate(-2.16, -1.5, 2);
     sphere2.setColor(Color(1, 1, 1));
-    sphere2.setReflectance(0.45);
+    sphere2.setReflectance(SPHERE_REFLECTIVITY);
 
     // Place sphere (radius 2)
     Sphere sphere3(2);
     sphere3.translate(4.71, -0.73, 0);
     sphere3.setColor(Color(1, 1, 1));
-    sphere3.setReflectance(0.45);
+    sphere3.setReflectance(SPHERE_REFLECTIVITY);
 
     // Place plane
     Plane plane(-2);
     plane.setColor(Color(1, 1, 1));
-    plane.setReflectance(0.65);
+    plane.setReflectance(PLANE_REFLECTIVITY);
 
     // Place lights
     Light light1;
@@ -47,18 +50,9 @@ int main(int argc, char **argv) {
     light3.setColor(0.1, 1, 0.1);
     
     // Scene initialization
-    Scene::setRenderSize(2560, 1440);
+    Scene::setRenderSize(1920, 1080);
     Scene::setAttenuation(1, 0, 0.05);
     Scene::setShadows(true);
-
-    Scene::addObject(&camera);
-    Scene::addObject(&sphere1);
-    Scene::addObject(&sphere2);
-    Scene::addObject(&sphere3);
-    Scene::addObject(&plane);
-    Scene::addObject(&light1);
-    Scene::addObject(&light2);
-    Scene::addObject(&light3);
 
     // Render scene
     PhongShading::renderWithRecursiveShading(file_name);

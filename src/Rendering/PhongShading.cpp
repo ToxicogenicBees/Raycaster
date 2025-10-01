@@ -1,5 +1,6 @@
 #include "../../include/Rendering/PhongShading.h"
 #include "../../include/Rendering/FrameBuffer.h"
+#include "../../include/Scene/BasicObjects.h"
 #include "../../include/Scene/Scene.h"
 
 #include <iomanip>
@@ -87,11 +88,11 @@ void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
     uint32_t size = Scene::_size.x * Scene::_size.y;
 
     if (pixels >= size)
-        printf("\r%s: 100.00%%\n", file_name.c_str());
+        printf("\r%s.ppm: 100.00%%\n", file_name.c_str());
     else if (pixels == 0)
-        printf("%s: 0.00%%", file_name.c_str());
+        printf("%s.ppm: 0.00%%", file_name.c_str());
     else
-        printf("\r%s: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
+        printf("\r%s.ppm: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
 
     fflush(stdout);
 }

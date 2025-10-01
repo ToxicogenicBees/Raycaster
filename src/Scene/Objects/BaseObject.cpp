@@ -1,5 +1,14 @@
 #include "../../../include/Scene/Objects/BaseObject.h"
 #include "../../../include/Scene/Transformations.h"
+#include "../../../include/Scene/Scene.h"
+
+BaseObject::BaseObject() {
+    Scene::addObject(this);
+}
+
+BaseObject::~BaseObject() {
+    Scene::removeObject(this);
+}
 
 void BaseObject::translate(const double3& dp) {
     auto translation = Transformations::translation(dp);
