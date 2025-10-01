@@ -1,6 +1,7 @@
 #pragma once
 
-#include "BasicObjects.h"
+#include "../../include/Scene/BasicObjects.h"
+
 #include <string>
 
 class Scene {
@@ -11,8 +12,8 @@ class Scene {
         static std::vector<Light*> _lights;
 
         // Generic scene values
-        static Point<uint16_t> _size;   // Image size
         static double3 _attenuation;    // Attenuation coefficients
+        static size3 _size;             // Image size
 
         static double _ambience;        // Abient light intensity
         static double _fov;             // Field of view
@@ -52,11 +53,32 @@ class Scene {
         static void addObject(Light* light);
 
         /***
+         * @brief Removes an object from the scene
+         * 
+         * @param obj   Pointer to the object removed from the scene
+         */
+        static void removeObject(BaseObject* obj);
+
+        /***
+         * @brief Removes a camera from the scene
+         * 
+         * @param obj   Pointer to the camera removed from the scene
+         */
+        static void removeObject(Camera* camera);
+
+        /***
+         * @brief Removes a light from the scene
+         * 
+         * @param obj   Pointer to the light removed from the scene
+         */
+        static void removeObject(Light* light);
+
+        /***
          * @brief Sets the rendered image's size
          * 
          * @param size  A point containing the image's (x, y) size, in pixels
          */
-        static void setRenderSize(const Point<uint16_t> size);
+        static void setRenderSize(const size3 size);
 
         /***
          * @brief Sets the rendered image's size

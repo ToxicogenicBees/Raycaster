@@ -1,10 +1,11 @@
+#include "../../include/Scene/BasicObjects.h"
 #include "../../include/Scene/Scene.h"
 
 std::vector<BaseObject*> Scene::_objects;
 std::vector<Camera*> Scene::_cameras;
 std::vector<Light*> Scene::_lights;
 
-Point<uint16_t> Scene::_size = Point<uint16_t>(512, 512);
+size3 Scene::_size = size3(512, 512);
 double3 Scene::_attenuation(1, 0, 0);
 bool Scene::_shadows = false;
 double Scene::_fov = 1.57079633;
@@ -30,12 +31,51 @@ void Scene::addObject(Light* light) {
     _lights.push_back(light);
 }
 
-void Scene::setRenderSize(const Point<uint16_t> size) {
+void Scene::removeObject(BaseObject* obj) {
+    uint16_t index = _objects.size() + 1;
+    for (uint16_t i = 0; i < _objects.size(); i++) {
+        if (_objects[i] == obj) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index < _objects.size())
+        _objects.erase(_objects.begin() + index);
+}
+
+void Scene::removeObject(Camera* camera) {
+    uint16_t index = _cameras.size() + 1;
+    for (uint16_t i = 0; i < _cameras.size(); i++) {
+        if (_cameras[i] == camera) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index < _cameras.size())
+        _cameras.erase(_cameras.begin() + index);
+}
+
+void Scene::removeObject(Light* light) {
+    uint16_t index = _lights.size() + 1;
+    for (uint16_t i = 0; i < _lights.size(); i++) {
+        if (_lights[i] == light) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index < _lights.size())
+        _lights.erase(_lights.begin() + index);
+}
+
+void Scene::setRenderSize(const size3 size) {
     _size = size;
 }
 
 void Scene::setRenderSize(uint16_t sx, uint16_t sy) {
-    _size = Point<uint16_t>(sx, sy);
+    _size = size3(sx, sy);
 }
 
 void Scene::setAttenuation(double3 attenuation) {
