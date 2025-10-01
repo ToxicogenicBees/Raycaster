@@ -2,6 +2,8 @@
 #include "../../include/Rendering/FrameBuffer.h"
 #include "../../include/Scene/Scene.h"
 
+#include <iomanip>
+
 uint16_t PhongShading::_MAX_RECURSIVE_DEPTH = 255;
 FrameBuffer PhongShading::_frame_buffer;
 
@@ -40,8 +42,21 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
     // Iterate over each light to determine their contributions
     for (Light* light : Scene::_lights) {
         // TODO: Shadows
-        // if (Scene::_shadows && ...)
-        //     continue;
+        if (Scene::_shadows) {
+            // Nudge intersection point slightly out of the object to avoid floating-point error
+            double3 shadow_origin = intersection.pos + intersection.normal * 1e-8;
+
+            // Cast a ray from the intersection point to the light source
+            double shadow_sqr_mag = (shadow_origin - light->_position).squaredMagnitude();
+            double3 shadow_dir = (light->_position - shadow_origin);
+            
+            // Test intersection with shadow ray
+            // If the ray intersects a (non-transparent) object, ignore this light's contribution
+            // Furthermore, ensure that the ray is only checking for intersections between the original intersection and the light, but not past the light
+            Intersection shadow_intersect = _closestIntersectionOnRay(Ray(shadow_origin, shadow_dir));
+            if (shadow_intersect.obj && (shadow_intersect.pos - light->_position).squaredMagnitude() <= shadow_sqr_mag)
+                continue;
+        }
 
         double3 light_vec = (intersection.pos - light->_position);
         double3 light_dir = light_vec.normal();
@@ -49,8 +64,8 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
         // Reflection vector
         double3 reflection_dir = _reflectionBetween(light_dir, intersection.normal);
 
-        // Attenuation coefficients: a = 0, b = 0, c = 5
-        double f_att = (Scene::_attenuation ? 0.2 / light_vec.squaredMagnitude() : 1);
+        // Attenuation coefficient
+        double f_att = 1 / ( Scene::_attenuation.x + Scene::_attenuation.y * light_vec.magnitude() + Scene::_attenuation.z * light_vec.squaredMagnitude() );
 
         // Calculate diffusive and specular components (clamped to avoid subtracting color when dot products go negative)
         // Phong reflection model requires light & view rays to be reversed for calculations, as they need to point away from the intersection
@@ -68,6 +83,19 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
     return color;
 }
 
+void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
+    uint32_t size = Scene::_size.x * Scene::_size.y;
+
+    if (pixels >= size)
+        printf("\r%s: 100.00%%\n", file_name.c_str());
+    else if (pixels == 0)
+        printf("%s: 0.00%%", file_name.c_str());
+    else
+        printf("\r%s: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
+
+    fflush(stdout);
+}
+
 Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& view_ray, uint16_t depth) {
     // Find regular I color for this intersection
     Color regular_i = _regularI(intersection, view_ray);
@@ -77,7 +105,7 @@ Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
         return regular_i;
 
     // Determine if an intersection with the reflected ray exists
-    double3 nudged_intersection = intersection.pos + intersection.normal * 1e-4;                    // Nudge the intersection a little bit to potentially avoid self-intersections
+    double3 nudged_intersection = intersection.pos + intersection.normal * 1e-8;                    // Nudge the intersection a little bit to potentially avoid self-intersections
     Ray new_view_ray(nudged_intersection, _reflectionBetween(view_ray.dir, intersection.normal));   // Calculate the reflection ray
     Intersection new_intersection = _closestIntersectionOnRay(new_view_ray);                        // Determine if an intersection exists
 
@@ -102,6 +130,7 @@ Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
 
 void PhongShading::_render(const std::string& file_name, bool use_recursive_shading) {
     uint16_t cur_camera_id = 0;
+    uint32_t pix_count = 0;
 
     // Set size of frame buffer
     _frame_buffer.resize(Scene::_size.x, Scene::_size.y);
@@ -131,12 +160,12 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
                 if (intersection.obj) {
                     Color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
                     _frame_buffer.setPixel(i, j, color);
-                }  
-
+                } 
             }
-            
-            if ((i + 1) % 100 == 0)
-                std::cout << "Rendered line " << i + 1 << std::endl;
+
+            // Log progress
+            pix_count += Scene::_size.y;
+            _logProgress(pix_count, new_img_name);
         }
 
         // Output current image data to file

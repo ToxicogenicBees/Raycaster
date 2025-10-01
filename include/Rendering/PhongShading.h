@@ -24,6 +24,9 @@ class PhongShading {
         // Regular Phong shading
         static Color _regularI(const Intersection& intersection, const Ray& view_ray);
 
+        // Render progress log
+        static void _logProgress(uint32_t pixels, const std::string &msg);
+
         // Rendering helper function
         static void _render(const std::string& file_name, bool use_recursive_shading);
 
