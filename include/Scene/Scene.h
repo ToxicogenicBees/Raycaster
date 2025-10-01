@@ -12,11 +12,11 @@ class Scene {
 
         // Generic scene values
         static Point<uint16_t> _size;   // Image size
+        static double3 _attenuation;    // Attenuation coefficients
 
         static double _ambience;        // Abient light intensity
         static double _fov;             // Field of view
-        
-        static bool _attenuation;       // Whether or not attenuation is accounted for
+
         static bool _shadows;           // Whether or not shadows are enabled
         
     public:
@@ -67,6 +67,20 @@ class Scene {
         static void setRenderSize(uint16_t sx, uint16_t sy);
 
         /***
+         * @brief Updates the attenuation coefficients
+         * 
+         * @param attenuation   The desired attenuation coefficients
+         */
+        static void setAttenuation(double3 attenuation);
+
+        /***
+         * @brief Updates the attenuation coefficients
+         * 
+         * @param attenuation   The desired attenuation coefficients
+         */
+        static void setAttenuation(double a, double b, double c);
+
+        /***
          * @brief Sets the intensity of ambient light in the scene
          * 
          * @param ambience  The ambient light intensity coefficient, [0, 1]
@@ -81,18 +95,9 @@ class Scene {
         static void setFOV(double fov);
         
         /***
-         * @brief Updates the attenuation flag to enable/disable attenuation
-         * 
-         * @param attenuation   The attenuation flag (true enables attenuation)
-         */
-        static void setAttenuation(bool attenuation);
-
-        /***
          * @brief Updates the shadows flag to enable/disable shadows
          * 
          * @param attenuation   The attenuation flag (true enables shadows)
          */
         static void setShadows(bool shadows);
-
-        
 };
