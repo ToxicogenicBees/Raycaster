@@ -11,7 +11,7 @@ BaseObject::~BaseObject() {
 }
 
 void BaseObject::translate(const double3& dp) {
-    auto translation = Transformations::translation(dp);
+    Matrix<double> translation = Transformations::translation(dp);
 
     for (double3& point : _points)
         Transformations::apply(translation, point);
@@ -22,7 +22,7 @@ void BaseObject::translate(double dx, double dy, double dz) {
 }
 
 void BaseObject::scale(const double3& s) {
-    auto scaling = Transformations::scale(s);
+    Matrix<double> scaling = Transformations::scale(s);
 
     for (double3& point : _points)
         Transformations::apply(scaling, point);
@@ -41,10 +41,10 @@ void BaseObject::rotate(const double3& r) {
 }
 
 void BaseObject::rotate(double rx, double ry, double rz) {
-    auto rotX = Transformations::rotateX(rx);
-    auto rotY = Transformations::rotateY(ry);
-    auto rotZ = Transformations::rotateZ(rz);
-    auto rotation = rotZ * rotY * rotX;
+    Matrix<double> rotX = Transformations::rotateX(rx);
+    Matrix<double> rotY = Transformations::rotateY(ry);
+    Matrix<double> rotZ = Transformations::rotateZ(rz);
+    Matrix<double> rotation = rotZ * rotY * rotX;
 
     for (double3& point : _points)
         Transformations::apply(rotation, point);
