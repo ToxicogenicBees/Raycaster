@@ -1,7 +1,15 @@
 #pragma once
 
 #include <iostream>
+#include <stdint.h>
 #include <cmath>
+
+template <class T>
+struct Point;
+
+using size3 = Point<uint16_t>;
+using double3 = Point<double>;
+using Color = Point<double>;
 
 template <class T>
 struct Point {
@@ -190,9 +198,6 @@ struct Point {
         return o;
     }
 };
-
-using double3 = Point<double>;
-using Color = Point<double>;
 
 template <class T>
 Point<T>::Point(T x, T y, T z) {

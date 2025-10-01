@@ -35,7 +35,7 @@ void Camera::translate(const double3& dp) {
     _updateOrientation();
 }
 
-Ray Camera::rayThroughPixel(const Point<uint16_t>& window_size, uint16_t x, uint16_t y) const {
+Ray Camera::rayThroughPixel(const size3& window_size, uint16_t x, uint16_t y) const {
     double s_x = (x + 0.5) / window_size.x;
     double s_y = (y + 0.5) / window_size.y;
 

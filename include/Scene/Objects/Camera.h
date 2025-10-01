@@ -85,7 +85,7 @@ class Camera : public PointObject {
          * 
          * @return The ray passing through the pixel, starting at the camera
          */
-        Ray rayThroughPixel(const Point<uint16_t>& window_size, uint16_t x, uint16_t y) const;
+        Ray rayThroughPixel(const size3& window_size, uint16_t x, uint16_t y) const;
 
         /***
          * @brief Runs pre-rendering calculations required for finding the camera's view vector through pixels
