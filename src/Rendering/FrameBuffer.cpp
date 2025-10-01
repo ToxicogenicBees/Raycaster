@@ -35,7 +35,6 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
         }
     }
 
-    std::cout << "Created " << image_name << ".ppm\n";
     img.close();
 }
 
