@@ -8,7 +8,7 @@ template <class T>
 class Vector2 {
     private:
         // Grid of nested vectors
-        std::vector<std::vector<T>> _data;
+        std::vector<T> _data;
 
         // Size in both x and y
         uint16_t _size_x, _size_y;
@@ -27,7 +27,7 @@ class Vector2 {
          * 
          * @param size      The desired (x, y) size of the grid
          */
-        Vector2(const Point<uint16_t>& size);
+        Vector2(const size3& size);
 
         /***
          * @brief Creates a grid of vectors copying the values of another grid of vectors
@@ -37,13 +37,35 @@ class Vector2 {
         Vector2(const Vector2& vec2);
 
         /***
+         * @brief Overloaded function operator, accessing an element of a constant Vector2
+         *        Throws std::out_of_range if the provided indexes are invalid
+         * 
+         * @param row   The desired x-index
+         * @param col   The desired y-index
+         * 
+         * @return Constant reference to the desired item
+         */
+        const T& operator()(uint16_t x, uint16_t y) const;
+
+        /***
+         * @brief Overloaded function operator, accessing an element of a Vector2
+         *        Throws std::out_of_range if the provided indexes are invalid
+         * 
+         * @param row   The desired x-index
+         * @param col   The desired y-index
+         * 
+         * @return Reference to the desired item
+         */
+        T& operator()(uint16_t x, uint16_t y);
+
+        /***
          * @brief Overloaded subscript operator, accessing a row of a constant Vector2
          * 
          * @param index The desired y-index
          * 
          * @return Constant reference to the desired row of data
          */
-        const std::vector<T>& operator[](uint16_t index) const;
+        const T* operator[](uint16_t index) const;
 
         /***
          * @brief Overloaded subscript operator, accessing a row of a Vector2
@@ -52,7 +74,7 @@ class Vector2 {
          * 
          * @return Reference to the desired row of data
          */
-        std::vector<T>& operator[](uint16_t index);
+        T* operator[](uint16_t index);
         
         /***
          * @brief Overloaded assignment operator
@@ -68,7 +90,7 @@ class Vector2 {
          * 
          * @param size      The desired (x, y) size
          */
-        void resize(const Point<uint16_t>& size);
+        void resize(const size3& size);
         
         /***
          * @brief Resizes the Vector2 to be able to store the specific number of elements
@@ -106,7 +128,7 @@ Vector2<T>::Vector2(uint16_t size_x, uint16_t size_y) {
 }
 
 template <class T>
-Vector2<T>::Vector2(const Point<uint16_t>& size) {
+Vector2<T>::Vector2(const size3& size) {
     resize(size.x, size.y);
 }
 
@@ -118,7 +140,7 @@ Vector2<T>::Vector2(const Vector2& vec2) {
 }
 
 template <class T>
-void Vector2<T>::resize(const Point<uint16_t>& size) {
+void Vector2<T>::resize(const size3& size) {
     resize(size.x, size.y);
 }
 
@@ -127,19 +149,32 @@ void Vector2<T>::resize(uint16_t size_x, uint16_t size_y) {
     _size_x = size_x;
     _size_y = size_y;
 
-    _data.resize(_size_y);
-    for (uint16_t y = 0; y < _size_y; y++)
-        _data[y].resize(_size_x);
+    _data.resize(_size_x * _size_y);
+}
+
+
+template <class T>
+const T& Vector2<T>::operator()(uint16_t x, uint16_t y) const {
+    if (x >= _size_x || y >= _size_y)
+        throw std::out_of_range("Index out of range");
+    return _data[y * _size_x + x];
 }
 
 template <class T>
-const std::vector<T>& Vector2<T>::operator[](uint16_t index) const {
-    return _data[index];
+T& Vector2<T>::operator()(uint16_t x, uint16_t y) {
+    if (x >= _size_x || y >= _size_y)
+        throw std::out_of_range("Index out of range");
+    return _data[y * _size_x + x];
 }
 
 template <class T>
-std::vector<T>& Vector2<T>::operator[](uint16_t index) {
-    return _data[index];
+const T* Vector2<T>::operator[](uint16_t index) const {
+    return &_data[index * _size_x];
+}
+
+template <class T>
+T* Vector2<T>::operator[](uint16_t index) {
+    return &_data[index * _size_x];
 }
 
 template <class T>
@@ -153,9 +188,6 @@ Vector2<T>& Vector2<T>::operator=(const Vector2& vec2) {
 
 template <class T>
 void Vector2<T>::fill(const T& value) {
-    for (uint16_t i = 0; i < _size_y; i++) {
-        for (uint16_t j = 0; j < _size_x; j++) {
-            _data[i][j] = value;
-        }
-    }
+    for (uint32_t i = 0; i < _data.size(); i++)
+        _data[i] = value;
 }

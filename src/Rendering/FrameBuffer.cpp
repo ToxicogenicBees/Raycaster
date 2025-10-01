@@ -27,7 +27,7 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
 
     for (uint16_t y = 0; y < sizeY(); y++) {
         for (uint16_t x = 0; x < sizeX(); x++) {
-            corrected_color = _gammaCorrection(_buffer[y][x]);
+            corrected_color = _gammaCorrection(_buffer(x, y));
             
             img.put(255 * corrected_color.x);
             img.put(255 * corrected_color.y);
@@ -39,7 +39,7 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
 }
 
 void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
-    _buffer[y][x] = color;
+    _buffer(x, y) = color;
 }
 
 void FrameBuffer::resize(uint16_t size_x, uint16_t size_y) {

@@ -241,9 +241,7 @@ Matrix<T>::Matrix(const Matrix& m) {
 
 template <class T>
 const T& Matrix<T>::operator()(uint16_t row, uint16_t col) const {
-    if (row >= _rows || col >= _cols)
-        throw std::out_of_range("Index out of range");
-    return _data[col][row];
+    return _data(row, col);
 }
 
 template <class T>
@@ -257,9 +255,7 @@ const T& Matrix<T>::operator()(uint16_t index) const {
 
 template <class T>
 T& Matrix<T>::operator()(uint16_t row, uint16_t col) {
-    if (row >= _rows || col >= _cols)
-        throw std::out_of_range("Index out of range");
-    return _data[col][row];
+    return _data(row, col);
 }
 
 template <class T>
