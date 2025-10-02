@@ -93,7 +93,5 @@ Intersection Polygon::findIntersection(const Ray& ray) const {
     }
 
     // Return results
-    if (inside)
-        return calculated_intersection;
-    return Intersection();
+    return (inside ? calculated_intersection : Intersection());
 }
