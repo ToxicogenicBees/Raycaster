@@ -5,11 +5,6 @@ Intersection PolygonMesh::findIntersection(const Ray& ray) const {
     Intersection closest_inter;
 
     for (Polygon* p : _polygons) {
-        if (!p) {
-            std::cerr << "Null polygon pointer in PolygonMesh!\n";
-            continue;
-        }
-        
         // Attempt to intersect a ray with this object
         Intersection new_inter = p->findIntersection(ray);
         
