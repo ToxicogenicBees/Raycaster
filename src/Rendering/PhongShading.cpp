@@ -5,7 +5,7 @@
 
 #include <iomanip>
 
-uint16_t PhongShading::_MAX_RECURSIVE_DEPTH = 255;
+uint16_t PhongShading::_MAX_RECURSIVE_DEPTH = 30;
 FrameBuffer PhongShading::_frame_buffer;
 
 namespace {
