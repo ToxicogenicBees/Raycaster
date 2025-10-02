@@ -84,19 +84,6 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
     return color;
 }
 
-void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
-    uint32_t size = Scene::_size.x * Scene::_size.y;
-
-    if (pixels >= size)
-        printf("\r%s.ppm: 100.00%%\n", file_name.c_str());
-    else if (pixels == 0)
-        printf("%s.ppm: 0.00%%", file_name.c_str());
-    else
-        printf("\r%s.ppm: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
-
-    fflush(stdout);
-}
-
 Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& view_ray, uint16_t depth) {
     // Find regular I color for this intersection
     Color regular_i = _regularI(intersection, view_ray);
@@ -128,6 +115,20 @@ Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
         + transparency_color * intersection.obj->_transparency
         + reflected_color * intersection.obj->_reflectance;
 }
+
+void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
+    uint32_t size = Scene::_size.x * Scene::_size.y;
+
+    if (pixels >= size)
+        printf("\r%s.ppm: 100.00%%\n", file_name.c_str());
+    else if (pixels == 0)
+        printf("%s.ppm: 0.00%%", file_name.c_str());
+    else
+        printf("\r%s.ppm: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
+
+    fflush(stdout);
+}
+
 
 void PhongShading::_render(const std::string& file_name, bool use_recursive_shading) {
     uint16_t cur_camera_id = 0;
@@ -162,14 +163,15 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
                     Color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
                     _frame_buffer.setPixel(i, j, color);
                 } 
+                
+                // Log progress
+                if (++pix_count % 5000 == 0)
+                    _logProgress(pix_count, new_img_name);
             }
-
-            // Log progress
-            pix_count += Scene::_size.y;
-            _logProgress(pix_count, new_img_name);
         }
 
         // Output current image data to file
+        _logProgress(pix_count, new_img_name);
         _frame_buffer.outputToFile(new_img_name);
         cur_camera_id++;
     }
