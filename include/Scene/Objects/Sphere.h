@@ -13,6 +13,11 @@ class Sphere : public BaseObject {
         */
         Sphere(double radius);
 
+         /**
+         * @brief Destroys and removes the sphere from the scene
+        */
+        ~Sphere() = default;
+
         /**
          * @brief Finds the intersection between a view ray and this object, if one exists
          * 

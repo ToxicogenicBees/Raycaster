@@ -25,6 +25,11 @@ class Plane : public BaseObject {
          * @param distance  The desired distance
          */
         Plane(double distance);
+
+         /**
+         * @brief Destroys and removes the plane from the scene
+        */
+        ~Plane() = default;
         
         /**
          * @brief Finds the intersection between a view ray and this object, if one exists
