@@ -14,6 +14,7 @@ class BaseObject {
         
         // Reflection variables
         Color _color = Color(1, 1, 1);  // Object's color
+        double _refraction_index = 1;   // Object's refraction index
         double _transparency = 0;       // Object transparency
         double _reflectance = 0;        // Surface reflectance
         double _diffusion = 0.6;        // Diffusion reflection
@@ -109,10 +110,17 @@ class BaseObject {
          * @brief Sets the color of the object
          * 
          * @param r         The desired red color
-         * @param g         The desired red color
-         * @param b         The desired red color
+         * @param g         The desired green color
+         * @param b         The desired blue color
          */
         void setColor(double r, double g, double b);
+
+        /**
+         * @brief Sets the refraction index of the object
+         * 
+         * @param refraction_index  The desired refraction index
+         */
+        void setRefractionIndex(double refraction_index);
 
         /**
          * @brief Sets the reflectance of the object
