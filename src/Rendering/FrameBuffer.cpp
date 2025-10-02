@@ -28,10 +28,9 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     for (uint16_t y = 0; y < sizeY(); y++) {
         for (uint16_t x = 0; x < sizeX(); x++) {
             corrected_color = _gammaCorrection(_buffer(x, y));
-            
-            img.put(255 * corrected_color.x);
-            img.put(255 * corrected_color.y);
-            img.put(255 * corrected_color.z);
+            img.put(std::round(255 * corrected_color.x));
+            img.put(std::round(255 * corrected_color.y));
+            img.put(std::round(255 * corrected_color.z));
         }
     }
 
