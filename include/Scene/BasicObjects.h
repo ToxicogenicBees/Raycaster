@@ -10,3 +10,6 @@
 #include "Objects/Sphere.h"
 #include "Objects/Plane.h"
 #include "Objects/Box.h"
+
+// Composite objects
+#include "Objects/PolygonMesh.h"
