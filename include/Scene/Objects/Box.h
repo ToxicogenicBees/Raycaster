@@ -7,7 +7,7 @@ class Box : public BaseObject {
     private:
         double3 _half_size;
 
-        void _renormalize_axis();
+        void _renormalizeAxis();
 
     public:
         using BaseObject::translate;

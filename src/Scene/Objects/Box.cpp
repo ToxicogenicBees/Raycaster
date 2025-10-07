@@ -17,7 +17,7 @@ double safeDivision(double num, double den) {
     return (std::fabs(den) < ERR) ? ((num > 0) ? +INFINITY : -INFINITY) : (num / den);
 }
 
-void Box::_renormalize_axis() {
+void Box::_renormalizeAxis() {
     _points[U] = _points[U].normal();
     _points[V] = _points[V].normal();
     _points[W] = _points[W].normal();
@@ -107,11 +107,11 @@ void Box::translate(const double3& dp) {
 
 void Box::rotate(const double3& r) {
     BaseObject::rotate(r);
-    _renormalize_axis();
+    _renormalizeAxis();
 }
 
 void Box::scale(const double3& s) {
     BaseObject::scale(s);
-    _renormalize_axis();
+    _renormalizeAxis();
     _half_size *= s;
 }
