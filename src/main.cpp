@@ -21,19 +21,22 @@ int main(int argc, char **argv) {
     sphere2.setColor(0.1, 0.1, 1);
 
     Box box(double3(-2, -2, -2), double3(2, 2, 2));
-    box.setReflectance(0.7);
+    box.setReflectance(0.35);
     box.rotate(0, 0, 0.52359878);
     box.translate(4.71, -0.73, 0);
     box.setColor(1, 0.1, 0.1);
 
     Light light1;
     light1.positionAt(-5, 4.5, 4);
+    light1.setColor(1, 0.5, 0.5);
 
     Light light2;
     light2.positionAt(4.16, -4.92, 3);
+    light2.setColor(0.5, 0.5, 1);
 
     Light light3;
     light3.positionAt(5.36, 4.6, 3.5);
+    light3.setColor(0.5, 1, 0.5);
 
     Plane plane(-2);
     plane.setColor(Color(0.1, 0.1, 0.1));
