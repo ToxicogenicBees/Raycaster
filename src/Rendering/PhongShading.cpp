@@ -132,7 +132,6 @@ void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
 
 void PhongShading::_render(const std::string& file_name, bool use_recursive_shading) {
     uint16_t cur_camera_id = 0;
-    uint32_t pix_count = 0;
 
     // Set size of frame buffer
     _frame_buffer.resize(Scene::_size.x, Scene::_size.y);
@@ -145,6 +144,7 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
 
         // Clear the frame buffer
         _frame_buffer.fill(BACKGROUND_COLOR);
+        uint32_t pix_count = 0;
 
         // Let the camera pre-calculate values for view vector calculations
         camera->preRenderInit(_frame_buffer, Scene::_fov);
