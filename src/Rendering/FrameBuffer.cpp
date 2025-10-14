@@ -46,6 +46,9 @@ void FrameBuffer::resize(size_t size_x, size_t size_y) {
 }
 
 void FrameBuffer::fill(const Color& color) {
-    for (auto& c : _buffer)
-        c = color;
+    for (size_t i = 0; i < sizeX(); i++) {
+        for (size_t j = 0; j < sizeY(); j++) {
+            setPixel(i, j, color);
+        }
+    }
 }
