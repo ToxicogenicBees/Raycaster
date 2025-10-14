@@ -18,7 +18,7 @@ class Camera {
 
         // Per-render values
         double _tan_fov_x, _tan_fov_y;
-        uint16_t _size_x, _size_y;
+        size_t _size_x, _size_y;
 
         // Update the camera's orientation vectors
         void _updateOrientation();
@@ -109,7 +109,7 @@ class Camera {
          * 
          * @return The ray passing through the pixel, starting at the camera
          */
-        Ray rayThroughPixel(const size3& window_size, uint16_t x, uint16_t y) const;
+        Ray rayThroughPixel(const size3& window_size, size_t x, size_t y) const;
 
         /***
          * @brief Runs pre-rendering calculations required for finding the camera's view vector through pixels

@@ -3,8 +3,8 @@
 #include <cmath>
 
 namespace {
-    constexpr const uint16_t ORIGIN = 0;
-    constexpr const uint16_t NORMAL = 1;
+    constexpr const uint8_t ORIGIN = 0;
+    constexpr const uint8_t NORMAL = 1;
 }
 
 Plane::Plane(const double3& normal, double distance) {

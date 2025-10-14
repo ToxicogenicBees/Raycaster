@@ -7,7 +7,7 @@
 template <class T>
 class Matrix {
     private:
-        uint16_t _rows, _cols;      // Matrix rows and columns
+        size_t _rows, _cols;      // Matrix rows and columns
         Vector2<T> _data;           // Matrix entries
 
     public:
@@ -18,7 +18,7 @@ class Matrix {
          * @param cols      The number of columns in the matrix
          * @param init_val  The initial value populating the matrix
          */
-        Matrix(uint16_t rows, uint16_t cols, const T& init_val);
+        Matrix(size_t rows, size_t cols, const T& init_val);
 
         /***
          * @brief Creates a matrix with the desired rows and columns
@@ -26,7 +26,7 @@ class Matrix {
          * @param rows      The number of rows in the matrix
          * @param cols      The number of columns in the matrix
          */
-        Matrix(uint16_t rows, uint16_t cols);
+        Matrix(size_t rows, size_t cols);
 
         /***
          * @brief Creates a matrix copying the values of another matrix
@@ -44,7 +44,7 @@ class Matrix {
          * 
          * @return Constant reference to the desired item
          */
-        const T& operator()(uint16_t row, uint16_t col) const;
+        const T& operator()(size_t row, size_t col) const;
 
         /***
          * @brief Overloaded function operator, accessing an element of a constant column/row vector
@@ -55,7 +55,7 @@ class Matrix {
          * 
          * @return Constant reference to the desired item
          */
-        const T& operator()(uint16_t index) const;
+        const T& operator()(size_t index) const;
 
         /***
          * @brief Overloaded function operator, accessing an element of a 2D matrix
@@ -66,7 +66,7 @@ class Matrix {
          * 
          * @return Reference to the desired item
          */
-        T& operator()(uint16_t row, uint16_t col);
+        T& operator()(size_t row, size_t col);
 
         /***
          * @brief Overloaded function operator, accessing an element of a column/row vector
@@ -77,7 +77,7 @@ class Matrix {
          * 
          * @return Reference to the desired item
          */
-        T& operator()(uint16_t index);
+        T& operator()(size_t index);
 
         /***
          * @brief Overloaded assignment operator
@@ -188,14 +188,14 @@ class Matrix {
          * 
          * @return The number of rows in this matrix
          */
-        uint16_t rows() const { return _rows; }
+        size_t rows() const { return _rows; }
 
         /***
          * @brief Get the number of columns in this matrix
          * 
          * @return The number of columns in this matrix
          */
-        uint16_t cols() const { return _cols; }
+        size_t cols() const { return _cols; }
 
         /***
          * @brief Overloaded insertion operator
@@ -206,8 +206,8 @@ class Matrix {
          * @result A reference to the output stream being output to
          */
         friend std::ostream& operator<<(std::ostream& o, const Matrix<T>& m) {
-            for (uint16_t row = 0; row < m._rows; row++) {
-                for (uint16_t col = 0; col < m._cols; col++) {
+            for (size_t row = 0; row < m._rows; row++) {
+                for (size_t col = 0; col < m._cols; col++) {
                     o << m(row, col) << (col == m._cols - 1 ? "\n" : " ");
                 }
             }
@@ -217,7 +217,7 @@ class Matrix {
 };
 
 template <class T>
-Matrix<T>::Matrix(uint16_t rows, uint16_t cols, const T& init_val) {
+Matrix<T>::Matrix(size_t rows, size_t cols, const T& init_val) {
     _data.resize(rows, cols);
     _data.fill(init_val);
     
@@ -226,7 +226,7 @@ Matrix<T>::Matrix(uint16_t rows, uint16_t cols, const T& init_val) {
 }
 
 template <class T>
-Matrix<T>::Matrix(uint16_t rows, uint16_t cols) {
+Matrix<T>::Matrix(size_t rows, size_t cols) {
     _data.resize(rows, cols);
     _rows = rows;
     _cols = cols;
@@ -240,12 +240,12 @@ Matrix<T>::Matrix(const Matrix& m) {
 }
 
 template <class T>
-const T& Matrix<T>::operator()(uint16_t row, uint16_t col) const {
+const T& Matrix<T>::operator()(size_t row, size_t col) const {
     return _data(row, col);
 }
 
 template <class T>
-const T& Matrix<T>::operator()(uint16_t index) const {
+const T& Matrix<T>::operator()(size_t index) const {
     if (_rows > 1 && _cols > 1)
         throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
     if (index >= (_rows > _cols ? _rows : _cols))
@@ -254,12 +254,12 @@ const T& Matrix<T>::operator()(uint16_t index) const {
 }
 
 template <class T>
-T& Matrix<T>::operator()(uint16_t row, uint16_t col) {
+T& Matrix<T>::operator()(size_t row, size_t col) {
     return _data(row, col);
 }
 
 template <class T>
-T& Matrix<T>::operator()(uint16_t index) {
+T& Matrix<T>::operator()(size_t index) {
     if (_rows > 1 && _cols > 1)
         throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
     if (index >= (_rows > _cols ? _rows : _cols))
@@ -283,8 +283,8 @@ Matrix<T> Matrix<T>::operator+(const Matrix& m) const {
 
     Matrix result(_rows, _cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             result(i, j) = (i, j) + m(i, j);
         }
     }
@@ -297,8 +297,8 @@ void Matrix<T>::operator+=(const Matrix& m) {
     if (_rows != m._rows || _cols != m._cols)
         throw std::invalid_argument("Incompatible matrix sizes");
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             (*this)(i, j) += m(i, j);
         }
     }
@@ -311,8 +311,8 @@ Matrix<T> Matrix<T>::operator-(const Matrix& m) const {
 
     Matrix result(_rows, _cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             result(i, j) = (*this)(i, j) - m(i, j);
         }
     }
@@ -325,8 +325,8 @@ void Matrix<T>::operator-=(const Matrix& m) {
     if (_rows != m._rows || _cols != m._cols)
         throw std::invalid_argument("Incompatible matrix sizes");
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             (*this)(i, j) -= m(i, j);
         }
     }
@@ -336,8 +336,8 @@ template <class T>
 Matrix<T> Matrix<T>::operator-() const {
     Matrix result(_rows, _cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             result(i, j) = -(*this)(i, j);
         }
     }
@@ -352,10 +352,10 @@ Matrix<T> Matrix<T>::operator*(const Matrix& m) const {
 
     Matrix result(_rows, m._cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < m._cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < m._cols; j++) {
             T sum = T();
-            for (uint16_t k = 0; k < _cols; k++)
+            for (size_t k = 0; k < _cols; k++)
                 sum += (*this)(i, k) * m(k, j);
             result(i, j) = sum;
         }
@@ -368,8 +368,8 @@ template <class T>
 Matrix<T> Matrix<T>::operator*(T s) const noexcept {
     Matrix result(_rows, _cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             result(i, j) = (*this)(i, j) * s;
         }
     }
@@ -384,8 +384,8 @@ void Matrix<T>::operator*=(const Matrix& m) {
 
 template <class T>
 void Matrix<T>::operator*=(T s) noexcept {
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             (*this)(i, j) *= s;
         }
     }
@@ -395,8 +395,8 @@ template <class T>
 Matrix<T> Matrix<T>::operator/(T s) const noexcept {
     Matrix result(_rows, _cols);
 
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             result(i, j) = (*this)(i, j) / s;
         }
     }
@@ -406,8 +406,8 @@ Matrix<T> Matrix<T>::operator/(T s) const noexcept {
 
 template <class T>
 void Matrix<T>::operator/=(T s) noexcept {
-    for (uint16_t i = 0; i < _rows; i++) {
-        for (uint16_t j = 0; j < _cols; j++) {
+    for (size_t i = 0; i < _rows; i++) {
+        for (size_t j = 0; j < _cols; j++) {
             (*this)(i, j) /= s;
         }
     }

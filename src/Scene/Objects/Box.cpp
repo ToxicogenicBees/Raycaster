@@ -7,10 +7,10 @@
 
 namespace {
     const double ERR = 1e-8;
-    const uint16_t CENTER = 0;
-    const uint16_t U = 1;
-    const uint16_t V = 2;
-    const uint16_t W = 3;
+    const uint8_t CENTER = 0;
+    const uint8_t U = 1;
+    const uint8_t V = 2;
+    const uint8_t W = 3;
 }
 
 double safeDivision(double num, double den) {

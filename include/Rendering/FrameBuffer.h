@@ -7,10 +7,10 @@
 class FrameBuffer {
     private:
         // 2D buffer of color objects
-        Vector2<Color> _buffer = Vector2<Color>(1920, 1080);
+        Vector2<color> _buffer = Vector2<color>(1920, 1080);
 
         // Run gamma correction on a color to attempt to avoid color banding
-        Color _gammaCorrection(const Color& color) const;
+        color _gammaCorrection(const color& color) const;
 
     public:
         /***
@@ -27,7 +27,7 @@ class FrameBuffer {
          * @param y     The desired y-index of the buffer
          * @param color The desired color to place in the buffer
          */
-        void setPixel(uint16_t x, uint16_t y, const Color& color);
+        void setPixel(size_t x, size_t y, const color& color);
 
         /**
          * @brief Resizes the buffer to a desired size
@@ -35,14 +35,14 @@ class FrameBuffer {
          * @param size_x    The desired buffer width
          * @param size_y    The desired buffer height
          */
-        void resize(uint16_t size_x, uint16_t size_y);
+        void resize(size_t size_x, size_t size_y);
 
         /***
          * @brief Fills every pixel of the buffer with a desired color
          * 
          * @param color The desired color to place in the buffer
          */
-        void fill(const Color& color);
+        void fill(const color& color);
 
         /***
          * @brief Get the buffer's width
@@ -51,7 +51,7 @@ class FrameBuffer {
          * 
          * @return      The buffer's width
          */
-        uint16_t sizeX() const { return _buffer.sizeX(); }
+        size_t sizeX() const { return _buffer.sizeX(); }
 
         /***
          * @brief Get the buffer's height
@@ -60,5 +60,5 @@ class FrameBuffer {
          * 
          * @return      The buffer's height
          */
-        uint16_t sizeY() const { return _buffer.sizeY(); }
+        size_t sizeY() const { return _buffer.sizeY(); }
 };

@@ -70,7 +70,7 @@ Intersection Polygon::findIntersection(const Ray& ray) const {
     bool inside = false;
     double3 a, b;
 
-    for (uint16_t i = 0; i < flat_points.size(); i++) {
+    for (size_t i = 0; i < flat_points.size(); i++) {
         // Get current point and previous point around the polygon
         b = flat_points[(i == 0) ? flat_points.size() - 1 : i - 1];
         a = flat_points[i];

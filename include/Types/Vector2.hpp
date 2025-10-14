@@ -11,7 +11,7 @@ class Vector2 {
         std::vector<T> _data;
 
         // Size in both x and y
-        uint16_t _size_x, _size_y;
+        size_t _size_x, _size_y;
 
     public:
         /***
@@ -20,7 +20,7 @@ class Vector2 {
          * @param size_x    The desired width of the grid
          * @param size_y    The desired height of the grid
          */
-        Vector2(uint16_t size_x = 0, uint16_t size_y = 0);
+        Vector2(size_t size_x = 0, size_t size_y = 0);
 
         /***
          * @brief Creates a grid of vectors of the desired size
@@ -45,7 +45,7 @@ class Vector2 {
          * 
          * @return Constant reference to the desired item
          */
-        const T& operator()(uint16_t x, uint16_t y) const;
+        const T& operator()(size_t x, size_t y) const;
 
         /***
          * @brief Overloaded function operator, accessing an element of a Vector2
@@ -56,7 +56,7 @@ class Vector2 {
          * 
          * @return Reference to the desired item
          */
-        T& operator()(uint16_t x, uint16_t y);
+        T& operator()(size_t x, size_t y);
 
         /***
          * @brief Overloaded subscript operator, accessing a row of a constant Vector2
@@ -65,7 +65,7 @@ class Vector2 {
          * 
          * @return Constant reference to the desired row of data
          */
-        const T* operator[](uint16_t index) const;
+        const T* operator[](size_t index) const;
 
         /***
          * @brief Overloaded subscript operator, accessing a row of a Vector2
@@ -74,7 +74,7 @@ class Vector2 {
          * 
          * @return Reference to the desired row of data
          */
-        T* operator[](uint16_t index);
+        T* operator[](size_t index);
         
         /***
          * @brief Overloaded assignment operator
@@ -98,7 +98,7 @@ class Vector2 {
          * @param size_x    The desired width
          * @param size_y    The desired height
          */
-        void resize(uint16_t size_x, uint16_t size_y);
+        void resize(size_t size_x, size_t size_y);
 
         /***
          * @brief Fill all the entries of the Vector2 with a specific value
@@ -112,18 +112,18 @@ class Vector2 {
          * 
          * @return The width of this Vector2
          */
-        uint16_t sizeX() const { return _size_x; }
+        size_t sizeX() const { return _size_x; }
 
         /***
          * @brief Get the height of this Vector2
          * 
          * @return The height of this Vector2
          */
-        uint16_t sizeY() const { return _size_y; }
+        size_t sizeY() const { return _size_y; }
 };
 
 template <class T>
-Vector2<T>::Vector2(uint16_t size_x, uint16_t size_y) {
+Vector2<T>::Vector2(size_t size_x, size_t size_y) {
     resize(size_x, size_y);
 }
 
@@ -145,7 +145,7 @@ void Vector2<T>::resize(const size3& size) {
 }
 
 template <class T>
-void Vector2<T>::resize(uint16_t size_x, uint16_t size_y) {
+void Vector2<T>::resize(size_t size_x, size_t size_y) {
     _size_x = size_x;
     _size_y = size_y;
 
@@ -154,26 +154,26 @@ void Vector2<T>::resize(uint16_t size_x, uint16_t size_y) {
 
 
 template <class T>
-const T& Vector2<T>::operator()(uint16_t x, uint16_t y) const {
+const T& Vector2<T>::operator()(size_t x, size_t y) const {
     if (x >= _size_x || y >= _size_y)
         throw std::out_of_range("Index out of range");
     return _data[y * _size_x + x];
 }
 
 template <class T>
-T& Vector2<T>::operator()(uint16_t x, uint16_t y) {
+T& Vector2<T>::operator()(size_t x, size_t y) {
     if (x >= _size_x || y >= _size_y)
         throw std::out_of_range("Index out of range");
     return _data[y * _size_x + x];
 }
 
 template <class T>
-const T* Vector2<T>::operator[](uint16_t index) const {
+const T* Vector2<T>::operator[](size_t index) const {
     return &_data[index * _size_x];
 }
 
 template <class T>
-T* Vector2<T>::operator[](uint16_t index) {
+T* Vector2<T>::operator[](size_t index) {
     return &_data[index * _size_x];
 }
 

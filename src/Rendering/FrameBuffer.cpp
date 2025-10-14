@@ -3,8 +3,8 @@
 #include <iostream>
 #include <fstream>
 
-Color FrameBuffer::_gammaCorrection(const Color& color) const{
-    return Color(
+color FrameBuffer::_gammaCorrection(const color& color) const{
+    return color(
         std::clamp(std::pow(color.x, 1.0 / 2.2), 0.0, 1.0),
         std::clamp(std::pow(color.y, 1.0 / 2.2), 0.0, 1.0),
         std::clamp(std::pow(color.z, 1.0 / 2.2), 0.0, 1.0)
@@ -23,10 +23,10 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     img << "P6\n" << sizeX() << " " << sizeY() << "\n255\n";
 
     // Write pixel data
-    Color corrected_color;
+    color corrected_color;
 
-    for (uint16_t y = 0; y < sizeY(); y++) {
-        for (uint16_t x = 0; x < sizeX(); x++) {
+    for (size_t y = 0; y < sizeY(); y++) {
+        for (size_t x = 0; x < sizeX(); x++) {
             corrected_color = _gammaCorrection(_buffer(x, y));
             img.put(std::round(255 * corrected_color.x));
             img.put(std::round(255 * corrected_color.y));
@@ -37,14 +37,14 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     img.close();
 }
 
-void FrameBuffer::setPixel(uint16_t x, uint16_t y, const Color& color) {
+void FrameBuffer::setPixel(size_t x, size_t y, const color& color) {
     _buffer(x, y) = color;
 }
 
-void FrameBuffer::resize(uint16_t size_x, uint16_t size_y) {
+void FrameBuffer::resize(size_t size_x, size_t size_y) {
     _buffer.resize(size_x, size_y);
 }
 
-void FrameBuffer::fill(const Color& color) {
+void FrameBuffer::fill(const color& color) {
     _buffer.fill(color);
 }

@@ -2,8 +2,8 @@
 #include <stdint.h>
 
 namespace {
-    constexpr const uint16_t CENTER = 0;
-    constexpr const uint16_t RADIUS = 1;
+    constexpr const uint8_t CENTER = 0;
+    constexpr const uint8_t RADIUS = 1;
 }
 
 Sphere::Sphere(double radius) {

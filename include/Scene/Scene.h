@@ -89,7 +89,7 @@ class Scene {
          * @param x The image's width, in pixels
          * @param y The image's height, in pixels
          */
-        static void setRenderSize(uint16_t sx, uint16_t sy);
+        static void setRenderSize(size_t sx, size_t sy);
 
         /***
          * @brief Updates the attenuation coefficients

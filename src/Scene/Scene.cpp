@@ -57,7 +57,7 @@ void Scene::setRenderSize(const size3 size) {
     _size = size;
 }
 
-void Scene::setRenderSize(uint16_t sx, uint16_t sy) {
+void Scene::setRenderSize(size_t sx, size_t sy) {
     _size = size3(sx, sy);
 }
 

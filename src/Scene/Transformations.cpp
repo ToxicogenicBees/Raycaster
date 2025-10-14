@@ -3,7 +3,7 @@
 
 Matrix<double> baseMat() {
     Matrix<double> matrix(4, 4, 0);
-    for (uint16_t i = 0; i < 4; i++)
+    for (size_t i = 0; i < 4; i++)
         matrix(i, i) = 1;
     return matrix;
 }
