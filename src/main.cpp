@@ -21,11 +21,11 @@ int main(int argc, char **argv) {
     sphere2.setColor(0.1, 0.1, 1);
 
     Box box(double3(-2, -2, -2), double3(2, 2, 2));
-    box.setReflectance(0.2);
+    box.setReflectance(0.25);
     box.rotate(0, 0, 0.52359878);
     box.translate(4.71, -0.73, 0);
     box.setColor(1, 0.1, 0.1);
-    box.setTransparency(0.75);
+    box.setTransparency(0.5);
 
     Light light1;
     light1.positionAt(-5, 4.5, 4);

@@ -19,7 +19,7 @@ class PhongShading {
         static Color _regularI(const Intersection& intersection, const Ray& view_ray);
 
         // Rendering helpers
-        static void _renderStrip(Camera* camera, size_t scan_line_start, size_t scan_line_end, bool use_recursive_shading);
+        static void _renderStrip(Camera* camera, size_t scan_line_start, size_t gap, bool use_recursive_shading);
         static void _render(const std::string& file_name, bool use_recursive_shading);
 
     public:

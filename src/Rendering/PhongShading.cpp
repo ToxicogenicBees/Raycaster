@@ -155,9 +155,9 @@ Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
         + reflected_color * intersection.obj->_reflectance;
 }
 
-void PhongShading::_renderStrip(Camera* camera, size_t scan_line_start, size_t scan_line_end, bool use_recursive_shading) {
+void PhongShading::_renderStrip(Camera* camera, size_t scan_line_start, size_t gap, bool use_recursive_shading) {
     for (size_t i = 0; i < Scene::_size.x; i++) {
-        for (size_t j = scan_line_start; j < scan_line_end; j++) {
+        for (size_t j = scan_line_start; j < Scene::_size.y; j += gap) {
             // Find view ray
             Ray view_ray = camera->rayThroughPixel(Scene::_size, i, j);
 
@@ -174,7 +174,7 @@ void PhongShading::_renderStrip(Camera* camera, size_t scan_line_start, size_t s
 }
 
 void PhongShading::_render(const std::string& file_name, bool use_recursive_shading) {
-    size_t num_threads = std::thread::hardware_concurrency();
+    size_t num_cores = std::thread::hardware_concurrency();
     size_t cur_camera_id = 0;
 
     // Set size of frame buffer
@@ -212,11 +212,9 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
         std::vector<std::thread> threads;
 
         // Render each strip of the image
-        size_t strip_height = Scene::_size.y / num_threads;
-        size_t max_height = Scene::_size.y + (Scene::_size.y % strip_height);
 
-        for (size_t height = 0; height < max_height; height += strip_height) {
-            threads.push_back(std::thread(_renderStrip, camera, height, std::min(height + strip_height, Scene::_size.y), use_recursive_shading));
+        for (size_t i = 0; i < num_cores; i++) {
+            threads.push_back(std::thread(_renderStrip, camera, i, num_cores, use_recursive_shading));
         }
 
         // Ensure each thread will complete before continuing
