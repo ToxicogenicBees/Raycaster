@@ -7,6 +7,7 @@ int main(int argc, char **argv) {
 
     // Place camera
     Camera camera;
+    camera.positionAt(10.1, 1.03, 2.5);
     camera.lookAt(0, 0, 0);
 
     Sphere sphere1(2.5);
@@ -20,7 +21,7 @@ int main(int argc, char **argv) {
     sphere2.setColor(0.1, 0.1, 1);
 
     Box box(double3(-2, -2, -2), double3(2, 2, 2));
-    box.setReflectance(0.05);
+    box.setReflectance(0.2);
     box.rotate(0, 0, 0.52359878);
     box.translate(4.71, -0.73, 0);
     box.setColor(1, 0.1, 0.1);
@@ -42,17 +43,13 @@ int main(int argc, char **argv) {
     plane.setColor(Color(0.1, 0.1, 0.1));
     plane.setReflectance(0);
     
-    // Scene initialization
+    // Scene attributes
     Scene::setRenderSize(1920, 1080);
     Scene::setAttenuation(1, 0, 0.05);
     Scene::setShadows(true);
 
     // Render scene
-    for (int i = 0; i < 360; i++) {
-        double angle = i * 0.0174532925199;
-        camera.positionAt(10 * std::cos(angle), 10 * std::sin(angle), 2.5);
-        PhongShading::renderWithRecursiveShading(file_name + "_" + std::to_string(i));
-    }
+    PhongShading::renderWithRecursiveShading(file_name);
 
     return 0;
 }
