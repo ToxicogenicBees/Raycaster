@@ -9,25 +9,17 @@ class PhongShading {
         static uint8_t _MAX_RECURSIVE_DEPTH;    // Maximum recursive ray depth
         static FrameBuffer _frame_buffer;       // The frame buffer used to store pixel data
 
-        // Finds the closest intersection with an object on a specified ray
+        // Ray manipulations
         static Intersection _closestIntersectionOnRay(const Ray& ray);
-
-        // Determines if a light ray is obstructed by an object
-        static bool _lightRayObstructed(Light* light, const Intersection& intersection);
-
-        // Calculate the reflection vector between a vector and a normal vector
+        static std::vector<Intersection> _allIntersectionsOnRay(const Ray& ray);
         static double3 _reflectionBetween(const double3& vec, const double3& normal);
 
-        // Recursive Phong shading
+        // Phong Reflection Model Calculations
         static Color _recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth = 0);
-
-        // Regular Phong shading
         static Color _regularI(const Intersection& intersection, const Ray& view_ray);
 
-        // Render progress log
-        static void _logProgress(uint32_t pixels, const std::string &msg);
-
-        // Rendering helper function
+        // Rendering helpers
+        static void _renderStrip(Camera* camera, size_t scan_line_start, size_t scan_line_end, bool use_recursive_shading);
         static void _render(const std::string& file_name, bool use_recursive_shading);
 
     public:

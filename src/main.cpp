@@ -7,7 +7,6 @@ int main(int argc, char **argv) {
 
     // Place camera
     Camera camera;
-    camera.positionAt(8.47, 4.58, 2.5);
     camera.lookAt(0, 0, 0);
 
     Sphere sphere1(2.5);
@@ -21,10 +20,11 @@ int main(int argc, char **argv) {
     sphere2.setColor(0.1, 0.1, 1);
 
     Box box(double3(-2, -2, -2), double3(2, 2, 2));
-    box.setReflectance(0.35);
+    box.setReflectance(0.05);
     box.rotate(0, 0, 0.52359878);
     box.translate(4.71, -0.73, 0);
     box.setColor(1, 0.1, 0.1);
+    box.setTransparency(0.75);
 
     Light light1;
     light1.positionAt(-5, 4.5, 4);
@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
     light3.positionAt(5.36, 4.6, 3.5);
     light3.setColor(0.5, 1, 0.5);
 
-    Plane plane(-2);
-    plane.setColor(0.1, 0.1, 0.1);
+    Plane plane(-2.0625);
+    plane.setColor(Color(0.1, 0.1, 0.1));
     plane.setReflectance(0);
     
     // Scene initialization
@@ -48,13 +48,11 @@ int main(int argc, char **argv) {
     Scene::setShadows(true);
 
     // Render scene
-    PhongShading::renderWithRecursiveShading(file_name + "_recursive_shadows");
-    PhongShading::renderWithSimpleShading(file_name + "_simple_shadows");
-
-    Scene::setShadows(false);
-
-    PhongShading::renderWithRecursiveShading(file_name + "_recursive_no_shadows");
-    PhongShading::renderWithSimpleShading(file_name + "_simple_no_shadows");
+    for (int i = 0; i < 360; i++) {
+        double angle = i * 0.0174532925199;
+        camera.positionAt(10 * std::cos(angle), 10 * std::sin(angle), 2.5);
+        PhongShading::renderWithRecursiveShading(file_name + "_" + std::to_string(i));
+    }
 
     return 0;
 }

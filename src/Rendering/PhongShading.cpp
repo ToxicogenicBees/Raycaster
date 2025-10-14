@@ -4,6 +4,8 @@
 #include "../../include/Scene/Scene.h"
 
 #include <iomanip>
+#include <chrono>
+#include <thread>
 
 uint8_t PhongShading::_MAX_RECURSIVE_DEPTH = 30;
 FrameBuffer PhongShading::_frame_buffer;
@@ -32,6 +34,22 @@ Intersection PhongShading::_closestIntersectionOnRay(const Ray& ray) {
     return closest_inter;
 }
 
+std::vector<Intersection> PhongShading::_allIntersectionsOnRay(const Ray& ray) {
+    std::vector<Intersection> intersections;
+
+    for (BaseObject* obj : Scene::_objects) {
+        // Attempt to intersect a ray with this object
+        Intersection new_inter = obj->findIntersection(ray);
+        
+        // If the intersection succeeded, and is the closest thus far, mark it
+        if (new_inter.obj)
+            intersections.push_back(new_inter);
+    }
+
+    // Return intersections
+    return intersections;
+}
+
 double3 PhongShading::_reflectionBetween(const double3& vec, const double3& normal) {
     return (vec - 2 * vec.dot(normal) * normal);
 }
@@ -42,31 +60,48 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
     
     // Iterate over each light to determine their contributions
     for (Light* light : Scene::_lights) {
-        // TODO: Shadows
+        double net_light_contribution = 1;
+
         if (Scene::_shadows) {
             // Nudge intersection point slightly out of the object to avoid floating-point error
             double3 shadow_origin = intersection.pos + intersection.normal * 1e-8;
 
             // Cast a ray from the intersection point to the light source
-            double shadow_sqr_mag = (shadow_origin - light->_position).squaredMagnitude();
             double3 shadow_dir = (light->_position - shadow_origin);
             
-            // Test intersection with shadow ray
-            // If the ray intersects a (non-transparent) object, ignore this light's contribution
-            // Furthermore, ensure that the ray is only checking for intersections between the original intersection and the light, but not past the light
-            Intersection shadow_intersect = _closestIntersectionOnRay(Ray(shadow_origin, shadow_dir));
-            if (shadow_intersect.obj && (shadow_intersect.pos - light->_position).squaredMagnitude() <= shadow_sqr_mag)
-                continue;
+            // Test intersections with shadow ray
+            for (Intersection& inter : _allIntersectionsOnRay(Ray(shadow_origin, shadow_dir))) {
+                // Ignore this object's contribution if the collision is already with this object
+                if (inter.obj == intersection.obj)
+                    continue;
+
+                // Ensure intersection doesn't occur after passing through the light
+                double3 to_inter = inter.pos - shadow_origin;
+                double3 to_light = light->_position - shadow_origin;
+
+                if (to_inter.squaredMagnitude() > to_light.squaredMagnitude())
+                    continue;
+                
+                // Calculate light contribution and break early if it's negligable
+                net_light_contribution *= inter.obj->_transparency;
+                if (net_light_contribution < 1e-8)
+                    break;
+            }
         }
 
+        // If this light's contribution is negligable, move on
+        if (net_light_contribution < 1e-8)
+            continue;
+
+        // Light direction
         double3 light_vec = (intersection.pos - light->_position);
         double3 light_dir = light_vec.normal();
 
         // Reflection vector
         double3 reflection_dir = _reflectionBetween(light_dir, intersection.normal);
 
-        // Attenuation coefficient
-        double f_att = 1 / ( Scene::_attenuation.x + Scene::_attenuation.y * light_vec.magnitude() + Scene::_attenuation.z * light_vec.squaredMagnitude() );
+        // Attenuation + shadow coefficient
+        double f_att = net_light_contribution / ( Scene::_attenuation.x + Scene::_attenuation.y * light_vec.magnitude() + Scene::_attenuation.z * light_vec.squaredMagnitude() );
 
         // Calculate diffusive and specular components (clamped to avoid subtracting color when dot products go negative)
         // Phong reflection model requires light & view rays to be reversed for calculations, as they need to point away from the intersection
@@ -85,58 +120,73 @@ Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
 }
 
 Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth) {
+    // Ensure the intersection exists
+    if (!intersection.obj)
+        return BACKGROUND_COLOR;
+
     // Find regular I color for this intersection
     Color regular_i = _regularI(intersection, view_ray);
 
     // If recursion is too deep, return the color at this intersection
     if (depth >= _MAX_RECURSIVE_DEPTH)
         return regular_i;
-
-    // Determine if an intersection with the reflected ray exists
-    double3 nudged_intersection = intersection.pos + intersection.normal * 1e-8;                    // Nudge the intersection a little bit to potentially avoid self-intersections
-    Ray new_view_ray(nudged_intersection, _reflectionBetween(view_ray.dir, intersection.normal));   // Calculate the reflection ray
-    Intersection new_intersection = _closestIntersectionOnRay(new_view_ray);                        // Determine if an intersection exists
-
-    // If there was a new intersection, run the recursive logic
+    
+    // Calculate transparency color if the transparency is > 0
     Color transparency_color = BACKGROUND_COLOR;
+
+    if (intersection.obj->_transparency > 0) {
+        Ray transparency_ray(intersection.pos + view_ray.dir * 1e-8, view_ray.dir);
+        Intersection transparency_intersection = _closestIntersectionOnRay(transparency_ray);
+        transparency_color = intersection.obj->_transparency * _recursiveI(transparency_intersection, transparency_ray, depth + 1);
+    }
+    
+    // Calculate reflected color if the reflectance is > 0
     Color reflected_color = BACKGROUND_COLOR;
 
-    if (new_intersection.obj) {
-        // TODO: Calculate transparency color if the transparency is > 0
-        // if (intersection.obj->_transparency > 0)
-        //     transparency_color = intersection.obj->_transparency * _recursiveI(...);
-
-        // Calculate reflected color if the reflectance is > 0
-        if (intersection.obj->_reflectance > 0)
-            reflected_color = intersection.obj->_reflectance * _recursiveI(new_intersection, new_view_ray, depth + 1);
+    if (intersection.obj->_reflectance > 0) {
+        Ray reflected_ray(intersection.pos + intersection.normal * 1e-8, _reflectionBetween(view_ray.dir, intersection.normal));
+        Intersection reflected_intersection = _closestIntersectionOnRay(reflected_ray);
+        reflected_color = intersection.obj->_reflectance * _recursiveI(reflected_intersection, reflected_ray, depth + 1);
     }
 
+    // Return weighted results
     return (1 - intersection.obj->_reflectance - intersection.obj->_transparency) * regular_i
         + transparency_color * intersection.obj->_transparency
         + reflected_color * intersection.obj->_reflectance;
 }
 
-void PhongShading::_logProgress(uint32_t pixels, const std::string &file_name) {
-    uint32_t size = Scene::_size.x * Scene::_size.y;
+void PhongShading::_renderStrip(Camera* camera, size_t scan_line_start, size_t scan_line_end, bool use_recursive_shading) {
+    for (size_t i = 0; i < Scene::_size.x; i++) {
+        for (size_t j = scan_line_start; j < scan_line_end; j++) {
+            // Find view ray
+            Ray view_ray = camera->rayThroughPixel(Scene::_size, i, j);
 
-    if (pixels >= size)
-        printf("\r%s.ppm: 100.00%%\n", file_name.c_str());
-    else if (pixels == 0)
-        printf("%s.ppm: 0.00%%", file_name.c_str());
-    else
-        printf("\r%s.ppm: %.2f%%", file_name.c_str(), 100.0 * pixels / size);
+            // Find intersection from ray through this pixel
+            Intersection intersection = _closestIntersectionOnRay(view_ray);
 
-    fflush(stdout);
+            // Set pixel's color at the intersection point
+            if (intersection.obj) {
+                Color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
+                _frame_buffer.setPixel(i, j, color);
+            }
+        }
+    }
 }
 
-
 void PhongShading::_render(const std::string& file_name, bool use_recursive_shading) {
+    size_t num_threads = std::thread::hardware_concurrency();
     size_t cur_camera_id = 0;
 
     // Set size of frame buffer
+
     _frame_buffer.resize(Scene::_size.x, Scene::_size.y);
 
+    // Iterate over each camera
     for (Camera* camera : Scene::_cameras) {
+        /*-------------------------------
+            Initialize the new camera
+        -------------------------------*/
+
         // Determine the image's new file name
         std::string new_img_name = file_name;
         if (Scene::_cameras.size() > 1)
@@ -144,36 +194,49 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
 
         // Clear the frame buffer
         _frame_buffer.fill(BACKGROUND_COLOR);
-        uint32_t pix_count = 0;
 
         // Let the camera pre-calculate values for view vector calculations
         camera->preRenderInit(_frame_buffer, Scene::_fov);
 
-        // Iterate over each pixel in the image
-        for (size_t i = 0; i < Scene::_size.x; i++) {
-            for (size_t j = 0; j < Scene::_size.y; j++) {
-                // Find view ray
-                Ray view_ray = camera->rayThroughPixel(Scene::_size, i, j);
+        // Log start in console
+        std::cout << "Rendering image \"" << new_img_name << "\": ";
 
-                // Find intersection from ray through this pixel
-                Intersection intersection = _closestIntersectionOnRay(view_ray);
+        /*----------------------
+            Render the scene
+        ----------------------*/
 
-                // Set pixel's color at the intersection point
-                if (intersection.obj) {
-                    Color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
-                    _frame_buffer.setPixel(i, j, color);
-                } 
-                
-                // Log progress
-                if (++pix_count % 5000 == 0)
-                    _logProgress(pix_count, new_img_name);
-            }
+        // Start timer
+        auto start = std::chrono::high_resolution_clock::now();
+
+        // Create vector of threads
+        std::vector<std::thread> threads;
+
+        // Render each strip of the image
+        size_t strip_height = Scene::_size.y / num_threads;
+        size_t max_height = Scene::_size.y + (Scene::_size.y % strip_height);
+
+        for (size_t height = 0; height < max_height; height += strip_height) {
+            threads.push_back(std::thread(_renderStrip, camera, height, std::min(height + strip_height, Scene::_size.y), use_recursive_shading));
         }
 
+        // Ensure each thread will complete before continuing
+        for (auto& t : threads)
+            t.join();
+        
+        // End timer
+        auto end = std::chrono::high_resolution_clock::now();
+
+        /*--------------------------
+            Output the new image
+        --------------------------*/
+
         // Output current image data to file
-        _logProgress(pix_count, new_img_name);
         _frame_buffer.outputToFile(new_img_name);
         cur_camera_id++;
+
+        // Log completion in console
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "Finished in " << duration.count() << " milliseconds\n";
     }
 }
 
