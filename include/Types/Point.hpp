@@ -9,7 +9,7 @@ struct Point;
 
 using double3 = Point<double>;
 using size3 = Point<size_t>;
-using color = Point<double>;
+using Color = Point<double>;
 
 template <class T>
 struct Point {

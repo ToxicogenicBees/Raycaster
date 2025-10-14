@@ -25,12 +25,12 @@ void Light::translate(double dx, double dy, double dz) {
     translate(double3(dx, dy, dz));
 }
 
-void Light::setColor(const color& color) {
+void Light::setColor(const Color& color) {
     _color = color;
 }
 
 void Light::setColor(double r, double g, double b) {
-    _color = color(r, g, b);
+    _color = Color(r, g, b);
 }
 
 void Light::setDiffusion(double diffusion) {

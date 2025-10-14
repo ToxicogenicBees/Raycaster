@@ -19,10 +19,10 @@ class PhongShading {
         static double3 _reflectionBetween(const double3& vec, const double3& normal);
 
         // Recursive Phong shading
-        static color _recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth = 0);
+        static Color _recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth = 0);
 
         // Regular Phong shading
-        static color _regularI(const Intersection& intersection, const Ray& view_ray);
+        static Color _regularI(const Intersection& intersection, const Ray& view_ray);
 
         // Render progress log
         static void _logProgress(uint32_t pixels, const std::string &msg);

@@ -50,12 +50,12 @@ void BaseObject::rotate(double rx, double ry, double rz) {
         Transformations::apply(rotation, point);
 }
 
-void BaseObject::setColor(const color& color) {
+void BaseObject::setColor(const Color& color) {
     _color = color;
 }
 
 void BaseObject::setColor(double r, double g, double b) {
-    _color = color(r, g, b);
+    _color = Color(r, g, b);
 }
 
 void BaseObject::setRefractionIndex(double refraction_index) {

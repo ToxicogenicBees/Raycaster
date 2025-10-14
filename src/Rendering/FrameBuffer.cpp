@@ -3,8 +3,8 @@
 #include <iostream>
 #include <fstream>
 
-color FrameBuffer::_gammaCorrection(const color& color) const{
-    return color(
+Color FrameBuffer::_gammaCorrection(const Color& color) const{
+    return Color(
         std::clamp(std::pow(color.x, 1.0 / 2.2), 0.0, 1.0),
         std::clamp(std::pow(color.y, 1.0 / 2.2), 0.0, 1.0),
         std::clamp(std::pow(color.z, 1.0 / 2.2), 0.0, 1.0)
@@ -23,7 +23,7 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     img << "P6\n" << sizeX() << " " << sizeY() << "\n255\n";
 
     // Write pixel data
-    color corrected_color;
+    Color corrected_color;
 
     for (size_t y = 0; y < sizeY(); y++) {
         for (size_t x = 0; x < sizeX(); x++) {
@@ -37,14 +37,15 @@ void FrameBuffer::outputToFile(const std::string& image_name) const {
     img.close();
 }
 
-void FrameBuffer::setPixel(size_t x, size_t y, const color& color) {
+void FrameBuffer::setPixel(size_t x, size_t y, const Color& color) {
     _buffer(x, y) = color;
 }
 
 void FrameBuffer::resize(size_t size_x, size_t size_y) {
-    _buffer.resize(size_x, size_y);
+    _buffer = Matrix<Color>(size_x, size_y);
 }
 
-void FrameBuffer::fill(const color& color) {
-    _buffer.fill(color);
+void FrameBuffer::fill(const Color& color) {
+    for (auto& c : _buffer)
+        c = color;
 }

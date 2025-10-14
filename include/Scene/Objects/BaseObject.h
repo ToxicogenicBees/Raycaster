@@ -13,7 +13,7 @@ class BaseObject {
         std::vector<double3> _points;   // Vector of related points for this object
         
         // Reflection variables
-        color _color = color(1, 1, 1);  // Object's color
+        Color _color = Color(1, 1, 1);  // Object's color
         double _refraction_index = 0;   // Object's refraction index
         double _transparency = 0;       // Object transparency
         double _reflectance = 0;        // Surface reflectance
@@ -104,7 +104,7 @@ class BaseObject {
          * 
          * @param color     The desired color
          */
-        void setColor(const color& color);
+        void setColor(const Color& color);
         
         /**
          * @brief Sets the color of the object

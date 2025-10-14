@@ -8,7 +8,7 @@ class Light {
         double3 _position = double3(0, 0, 0);
 
         // Rendering coefficients
-        color _color = color(1, 1, 1);
+        Color _color = Color(1, 1, 1);
         double _diffusion = 1;
         double _specular = 1;
 
@@ -61,7 +61,7 @@ class Light {
          * 
          * @param color     The desired color
          */
-        void setColor(const color& color);
+        void setColor(const Color& color);
 
         /**
          * @brief Sets the color of the light

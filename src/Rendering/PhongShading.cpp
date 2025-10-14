@@ -9,7 +9,7 @@ uint8_t PhongShading::_MAX_RECURSIVE_DEPTH = 30;
 FrameBuffer PhongShading::_frame_buffer;
 
 namespace {
-    const color BACKGROUND_COLOR(0, 0, 0);
+    const Color BACKGROUND_COLOR(0, 0, 0);
 }
 
 Intersection PhongShading::_closestIntersectionOnRay(const Ray& ray) {
@@ -36,9 +36,9 @@ double3 PhongShading::_reflectionBetween(const double3& vec, const double3& norm
     return (vec - 2 * vec.dot(normal) * normal);
 }
 
-color PhongShading::_regularI(const Intersection& intersection, const Ray& view_ray) {
+Color PhongShading::_regularI(const Intersection& intersection, const Ray& view_ray) {
     // Phong ambient reflection
-    color color = Scene::_ambience * intersection.obj->_ambience * intersection.obj->_color;
+    Color color = Scene::_ambience * intersection.obj->_ambience * intersection.obj->_color;
     
     // Iterate over each light to determine their contributions
     for (Light* light : Scene::_lights) {
@@ -84,9 +84,9 @@ color PhongShading::_regularI(const Intersection& intersection, const Ray& view_
     return color;
 }
 
-color PhongShading::_recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth) {
+Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& view_ray, uint8_t depth) {
     // Find regular I color for this intersection
-    color regular_i = _regularI(intersection, view_ray);
+    Color regular_i = _regularI(intersection, view_ray);
 
     // If recursion is too deep, return the color at this intersection
     if (depth >= _MAX_RECURSIVE_DEPTH)
@@ -98,8 +98,8 @@ color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
     Intersection new_intersection = _closestIntersectionOnRay(new_view_ray);                        // Determine if an intersection exists
 
     // If there was a new intersection, run the recursive logic
-    color transparency_color = BACKGROUND_COLOR;
-    color reflected_color = BACKGROUND_COLOR;
+    Color transparency_color = BACKGROUND_COLOR;
+    Color reflected_color = BACKGROUND_COLOR;
 
     if (new_intersection.obj) {
         // TODO: Calculate transparency color if the transparency is > 0
@@ -160,7 +160,7 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
 
                 // Set pixel's color at the intersection point
                 if (intersection.obj) {
-                    color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
+                    Color color = (use_recursive_shading ? _recursiveI(intersection, view_ray) : _regularI(intersection, view_ray));
                     _frame_buffer.setPixel(i, j, color);
                 } 
                 

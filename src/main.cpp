@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     light3.setColor(0.5, 1, 0.5);
 
     Plane plane(-2);
-    plane.setColor(color(0.1, 0.1, 0.1));
+    plane.setColor(0.1, 0.1, 0.1);
     plane.setReflectance(0);
     
     // Scene initialization

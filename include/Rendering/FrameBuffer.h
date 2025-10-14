@@ -7,10 +7,10 @@
 class FrameBuffer {
     private:
         // 2D buffer of color objects
-        Matrix<color> _buffer = Matrix<color>(1920, 1080);
+        Matrix<Color> _buffer = Matrix<Color>(1920, 1080);
 
         // Run gamma correction on a color to attempt to avoid color banding
-        color _gammaCorrection(const color& color) const;
+        Color _gammaCorrection(const Color& color) const;
 
     public:
         /***
@@ -27,7 +27,7 @@ class FrameBuffer {
          * @param y     The desired y-index of the buffer
          * @param color The desired color to place in the buffer
          */
-        void setPixel(size_t x, size_t y, const color& color);
+        void setPixel(size_t x, size_t y, const Color& color);
 
         /**
          * @brief Resizes the buffer to a desired size
@@ -42,7 +42,7 @@ class FrameBuffer {
          * 
          * @param color The desired color to place in the buffer
          */
-        void fill(const color& color);
+        void fill(const Color& color);
 
         /***
          * @brief Get the buffer's width
