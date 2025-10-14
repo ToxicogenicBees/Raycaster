@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Types/Vector2.hpp"
+#include "../Types/Matrix.hpp"
 #include "../Types/Point.hpp"
 #include <string>
 
 class FrameBuffer {
     private:
         // 2D buffer of color objects
-        Vector2<color> _buffer = Vector2<color>(1920, 1080);
+        Matrix<color> _buffer = Matrix<color>(1920, 1080);
 
         // Run gamma correction on a color to attempt to avoid color banding
         color _gammaCorrection(const color& color) const;
@@ -51,7 +51,7 @@ class FrameBuffer {
          * 
          * @return      The buffer's width
          */
-        size_t sizeX() const { return _buffer.sizeX(); }
+        size_t sizeX() const { return _buffer.rows(); }
 
         /***
          * @brief Get the buffer's height
@@ -60,5 +60,5 @@ class FrameBuffer {
          * 
          * @return      The buffer's height
          */
-        size_t sizeY() const { return _buffer.sizeY(); }
+        size_t sizeY() const { return _buffer.cols(); }
 };
