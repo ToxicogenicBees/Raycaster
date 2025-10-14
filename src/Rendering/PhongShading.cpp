@@ -178,7 +178,6 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
     size_t cur_camera_id = 0;
 
     // Set size of frame buffer
-
     _frame_buffer.resize(Scene::_size.x, Scene::_size.y);
 
     // Iterate over each camera
@@ -211,11 +210,9 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
         // Create vector of threads
         std::vector<std::thread> threads;
 
-        // Render each strip of the image
-
-        for (size_t i = 0; i < num_cores; i++) {
+        // Render segments of the image on each core
+        for (size_t i = 0; i < num_cores; i++)
             threads.push_back(std::thread(_renderSegment, camera, i, num_cores, use_recursive_shading));
-        }
 
         // Ensure each thread will complete before continuing
         for (auto& t : threads)
