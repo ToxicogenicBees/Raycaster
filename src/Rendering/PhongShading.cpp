@@ -155,7 +155,7 @@ Color PhongShading::_recursiveI(const Intersection& intersection, const Ray& vie
         + reflected_color * intersection.obj->_reflectance;
 }
 
-void PhongShading::_renderStrip(Camera* camera, size_t scan_line_start, size_t gap, bool use_recursive_shading) {
+void PhongShading::_renderSegment(Camera* camera, size_t scan_line_start, size_t gap, bool use_recursive_shading) {
     for (size_t i = 0; i < Scene::_size.x; i++) {
         for (size_t j = scan_line_start; j < Scene::_size.y; j += gap) {
             // Find view ray
@@ -214,7 +214,7 @@ void PhongShading::_render(const std::string& file_name, bool use_recursive_shad
         // Render each strip of the image
 
         for (size_t i = 0; i < num_cores; i++) {
-            threads.push_back(std::thread(_renderStrip, camera, i, num_cores, use_recursive_shading));
+            threads.push_back(std::thread(_renderSegment, camera, i, num_cores, use_recursive_shading));
         }
 
         // Ensure each thread will complete before continuing
