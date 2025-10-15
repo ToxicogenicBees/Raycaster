@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     
     // Scene attributes
     Scene::setRenderSize(1920, 1080);
-    Scene::setAttenuation(1, 0, 0.05);
+    Scene::setAttenuation(1, 0.05, 0);
     Scene::setShadows(true);
 
     // Render scene
