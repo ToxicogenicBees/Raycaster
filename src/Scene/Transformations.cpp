@@ -11,15 +11,15 @@ Matrix<double> baseMat() {
 void Transformations::apply(Matrix<double> transformation, Point<double>& point) {
     Matrix<double> homog_coord(4, 1, 1);
 
-    homog_coord(0) = point.x;
-    homog_coord(1) = point.y;
-    homog_coord(2) = point.z;
+    homog_coord(0, 0) = point.x;
+    homog_coord(1, 0) = point.y;
+    homog_coord(2, 0) = point.z;
 
     homog_coord = transformation * homog_coord;
 
-    point.x = homog_coord(0) / homog_coord(3);
-    point.y = homog_coord(1) / homog_coord(3);
-    point.z = homog_coord(2) / homog_coord(3);
+    point.x = homog_coord(0, 0) / homog_coord(3, 0);
+    point.y = homog_coord(1, 0) / homog_coord(3, 0);
+    point.z = homog_coord(2, 0) / homog_coord(3, 0);
 }
 
 Matrix<double> Transformations::translation(const Point<double>& dp) {

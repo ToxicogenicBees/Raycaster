@@ -6,15 +6,6 @@
 #include <ostream>
 #include <vector>
 
-// NOTE: Elements are stored in column-major order for MATLAB compatibility.
-
-namespace MatrixVector {
-    using MatrixVectorType = bool;
-
-    MatrixVectorType column = true;
-    MatrixVectorType row = false;
-}
-
 template <class T>
 class Matrix {
     private:
@@ -48,44 +39,12 @@ class Matrix {
         Matrix(size_t rows, size_t cols) noexcept;
 
         /***
-         * @brief Creates a vector of the desired size, populated with an initial value
-         * 
-         * @param size      The number of elements in the vector
-         * @param type      The vector type (column or row)
-         */
-        Matrix(size_t size, const T& init_val, MatrixVector::MatrixVectorType type = MatrixVector::column) noexcept;
-
-        /***
-         * @brief Creates a vector of the desired size
-         * 
-         * @param size      The number of elements in the vector
-         * @param type      The vector type (column or row)
-         */
-        Matrix(size_t size, MatrixVector::MatrixVectorType type = MatrixVector::column) noexcept;
-
-        /***
          * @brief Creates a matrix from the provided arguments
          *        Throws std::invalid_argument if the inner lists are not all the same size
          * 
          * @param values    An initializer list of array values
          */
         Matrix(const std::initializer_list<std::initializer_list<T>>& values);
-
-        /***
-         * @brief Creates a vector from the provided arguments
-         * 
-         * @param vec       An initializer list of array values
-         * @param type      The vector type (column/row)
-         */
-        Matrix(const std::initializer_list<T>& vec, MatrixVector::MatrixVectorType type = MatrixVector::column) noexcept;
-
-        /***
-         * @brief Creates a vector from the provided arguments
-         * 
-         * @param type      The vector type (column/row)
-         * @param vec       An initializer list of array values
-         */
-        Matrix(MatrixVector::MatrixVectorType type, const std::initializer_list<T>& vec) noexcept;
 
         /***
          * @brief Creates a matrix copying the values of another matrix
@@ -111,17 +70,6 @@ class Matrix {
         constexpr const T& operator()(size_t row, size_t col) const;
 
         /***
-         * @brief Overloaded function operator, accessing an element of a constant column/row vector
-         *        Throws std::out_of_range if the provided indexes are invalid
-         *        Throws std::invalid_argument if the matrix is not a column/row vector
-         * 
-         * @param index The desired element in the column/row vector
-         * 
-         * @return Constant reference to the desired item
-         */
-        constexpr const T& operator()(size_t index) const;
-
-        /***
          * @brief Overloaded function operator, accessing an element of a 2D matrix
          *        Throws std::out_of_range if the provided indexes are invalid
          * 
@@ -131,17 +79,6 @@ class Matrix {
          * @return Reference to the desired item
          */
         T& operator()(size_t row, size_t col);
-
-        /***
-         * @brief Overloaded function operator, accessing an element of a column/row vector
-         *        Throws std::out_of_range if the provided indexes are invalid
-         *        Throws std::invalid_argument if the matrix is not a column/row vector
-         * 
-         * @param index The desired element in the column/row vector
-         * 
-         * @return Reference to the desired item
-         */
-        T& operator()(size_t index);
 
         /***
          * @brief Overloaded comparison operator
@@ -278,27 +215,6 @@ class Matrix {
         constexpr size_t cols() const noexcept { return _cols; }
 
         /***
-         * @brief Determine if this matrix is a row vector
-         * 
-         * @return Whether this matrix is a row vector
-         */
-        constexpr bool isRowVec() const noexcept { return _rows == 1; }
-
-        /***
-         * @brief Determine if this matrix is a column vector
-         * 
-         * @return Whether this matrix is a column vector
-         */
-        constexpr bool isColVec() const noexcept { return _cols == 1; }
-
-        /***
-         * @brief Determine if this matrix is a row/column vector
-         * 
-         * @return Whether this matrix is a row/column vector
-         */
-        constexpr bool isVec() const noexcept { return isRowVec() || isColVec(); }
-
-        /***
          * @brief Get an iterator for the beginning of the matrix elements
          * 
          * @return Beginning iterator for the matrix elements
@@ -382,14 +298,6 @@ Matrix<T>::Matrix(size_t rows, size_t cols) noexcept
     : _rows(rows), _cols(cols), _data(rows * cols) {}
 
 template <class T>
-Matrix<T>::Matrix(size_t size, const T& init_val, MatrixVector::MatrixVectorType type) noexcept
-    : _rows(type == MatrixVector::column ? size : 1), _cols(type == MatrixVector::row ? size : 1), _data(size, init_val) {}
-
-template <class T>
-Matrix<T>::Matrix(size_t size, MatrixVector::MatrixVectorType type) noexcept
-    : _rows(type == MatrixVector::column ? size : 1), _cols(type == MatrixVector::row ? size : 1), _data(size) {}
-
-template <class T>
 Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& values) {
     // Determine row and column size
     _cols = values.begin()->size();
@@ -419,36 +327,6 @@ Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>>& values)
 }
 
 template <class T>
-Matrix<T>::Matrix(const std::initializer_list<T>& vec, MatrixVector::MatrixVectorType type) noexcept {
-    // Determine row and column size
-    _rows = (type == MatrixVector::column) ? vec.size() : 1;
-    _cols = (type == MatrixVector::row) ? vec.size() : 1;
-
-    // Resize matrix
-    _data.resize((type == MatrixVector::column) ? _rows : _cols);
-
-    // Populate matrix
-    size_t i = 0;
-    for (auto iter = vec.begin(); iter != vec.end(); iter++)
-        (*this)(i++) = *iter;
-}
-
-template <class T>
-Matrix<T>::Matrix(MatrixVector::MatrixVectorType type, const std::initializer_list<T>& vec) noexcept {
-    // Determine row and column size
-    _rows = (type == MatrixVector::column) ? vec.size() : 1;
-    _cols = (type == MatrixVector::row) ? vec.size() : 1;
-
-    // Resize matrix
-    _data.resize((type == MatrixVector::column) ? _rows : _cols);
-
-    // Populate matrix
-    size_t i = 0;
-    for (auto iter = vec.begin(); iter != vec.end(); iter++)
-        (*this)(i++) = *iter;
-}
-
-template <class T>
 Matrix<T>::Matrix(const Matrix& m) noexcept {
     _data = m._data;
     _rows = m._rows;
@@ -466,28 +344,9 @@ constexpr const T& Matrix<T>::operator()(size_t row, size_t col) const {
 }
 
 template <class T>
-constexpr const T& Matrix<T>::operator()(size_t index) const {
-    if (!isVec())
-        throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
-    if (index >= _data.size())
-        throw std::out_of_range("Index out of range");
-    return _data[index];
-}
-
-template <class T>
 T& Matrix<T>::operator()(size_t row, size_t col) {
     return _access(row, col);
 }
-
-template <class T>
-T& Matrix<T>::operator()(size_t index) {
-    if (!isVec())
-        throw std::invalid_argument("Matrix isn't a vector, requires multiple indexes");
-    if (index >= _data.size())
-        throw std::out_of_range("Index out of range");
-    return _data[index];
-}
-
 template <class T>
 constexpr bool Matrix<T>::operator==(const Matrix& m) const noexcept {
     // Sizes don't match
