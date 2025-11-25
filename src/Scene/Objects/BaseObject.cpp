@@ -58,10 +58,6 @@ void BaseObject::setColor(double r, double g, double b) {
     _color = Color(r, g, b);
 }
 
-void BaseObject::setRefractionIndex(double refraction_index) {
-    _refraction_index = refraction_index;
-}
-
 void BaseObject::setReflectance(double reflectance) {
     _reflectance = reflectance;
 }

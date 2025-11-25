@@ -12,9 +12,8 @@ class BaseObject {
         // Object's points
         std::vector<double3> _points;   // Vector of related points for this object
         
-        // Reflection variables
+        // Visual Properties
         Color _color = Color(1, 1, 1);  // Object's color
-        double _refraction_index = 0;   // Object's refraction index
         double _transparency = 0;       // Object transparency
         double _reflectance = 0;        // Surface reflectance
         double _diffusion = 0.6;        // Diffusion reflection
@@ -114,13 +113,6 @@ class BaseObject {
          * @param b         The desired red color
          */
         void setColor(double r, double g, double b);
-
-        /**
-         * @brief Sets the The desired refraction index of the object
-         * 
-         * @param refraction_index  The desired refraction index
-         */
-        void setRefractionIndex(double refraction_index);
 
         /**
          * @brief Sets the reflectance of the object
