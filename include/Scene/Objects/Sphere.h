@@ -13,8 +13,8 @@ class Sphere : public BaseObject {
         */
         Sphere(double radius);
 
-         /**
-         * @brief Destroys and removes the sphere from the scene
+        /**
+        * @brief Destroys and removes the sphere from the scene
         */
         ~Sphere() = default;
 

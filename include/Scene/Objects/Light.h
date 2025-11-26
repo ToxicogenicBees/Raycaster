@@ -14,6 +14,7 @@ class Light {
 
     public:
         friend class PhongShading;
+        
         /***
          * @brief Creates and places a light into the scene
          */
